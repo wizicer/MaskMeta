@@ -24,11 +24,20 @@
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
 
-        <EssentialLink
+        <q-item
           v-for="link in linksList"
           :key="link.title"
-          v-bind="link"
-        />
+          clickable
+          v-ripple
+          :to="link.link"
+        >
+          <q-item-section avatar>
+            <q-icon :name="link.icon" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ link.title }}</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -53,9 +62,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, {
-  EssentialLinkProps,
-} from 'components/EssentialLink.vue';
+import { EssentialLinkProps } from 'components/EssentialLink.vue';
 
 const tab = ref('home');
 
