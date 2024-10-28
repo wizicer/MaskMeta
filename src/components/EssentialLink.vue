@@ -2,13 +2,10 @@
   <q-item
     clickable
     tag="a"
-    target="_blank"
+    :target="link.startsWith('http') ? '_blank' : ''"
     :href="link"
   >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
+    <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
 
@@ -21,7 +18,7 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'EssentialLink'
+  name: 'EssentialLink',
 });
 
 export interface EssentialLinkProps {
@@ -29,7 +26,7 @@ export interface EssentialLinkProps {
   caption?: string;
   link?: string;
   icon?: string;
-};
+}
 
 withDefaults(defineProps<EssentialLinkProps>(), {
   caption: '',
