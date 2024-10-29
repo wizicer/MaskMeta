@@ -3,7 +3,7 @@
     <q-card class="q-dialog-plugin">
       <q-card-section>
         <div class="row items-center">
-          <q-icon name="face" size="2.5em" class="q-mr-md" />
+          <q-icon :name="icon" :color="color" size="2.5em" class="q-mr-md" />
           <div>
             <q-item-label>{{ title }}</q-item-label>
             <q-item-label caption>{{ description }}</q-item-label>
@@ -14,91 +14,118 @@
       </q-card-section>
       <q-separator />
       <q-card-section>
-        <q-input v-model="title" label="Title">
-          <template v-slot:prepend>
-            <q-icon name="title" />
-          </template>
-        </q-input>
-        <q-input v-model="description" label="Description">
-          <template v-slot:prepend>
-            <q-icon name="description" />
-          </template>
-        </q-input>
-        <q-select v-model="icon" :options="iconOptions" label="Icon">
-          <template v-slot:prepend>
-            <q-icon name="insert_emoticon" />
-          </template>
-          <template v-slot:option="scope">
-            <q-item v-bind="scope.itemProps">
-              <q-item-section avatar>
-                <q-icon :name="scope.opt" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ scope.opt }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
-        <q-select v-model="color" :options="colorOptions" label="Color">
-          <template v-slot:prepend>
-            <q-icon name="color_lens" />
-          </template>
-          <template v-slot:option="scope">
-            <q-item v-bind="scope.itemProps">
-              <q-item-section>
-                <q-item-label :class="'text-' + scope.opt">{{
-                  scope.opt
-                }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
-        <q-input
-          v-model="privateKey"
-          label="Private Key"
-          readonly
-          :type="privateKeyType"
+        <q-tabs
+          v-model="tab"
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
         >
-          <template v-slot:prepend>
-            <q-icon name="password" />
-          </template>
-          <template v-slot:append>
-            <q-icon
-              :name="
-                privateKeyType === 'password' ? 'visibility' : 'visibility_off'
-              "
-              @click="togglePrivateKeyVisibility"
-              class="cursor-pointer"
-            />
-          </template>
-        </q-input>
-        <q-input v-model="publicKey" label="Public Key" readonly>
-          <template v-slot:prepend>
-            <q-icon name="vpn_key" />
-          </template>
-        </q-input>
-        <q-separator class="q-mt-md" />
-        <div class="row items-center q-mt-md">
-          <q-icon name="cloud" size="2.5em" class="q-mr-md" />
-          <div>
-            <q-item-label class="text-h6">Methods</q-item-label>
-          </div>
-        </div>
-
-        <q-list>
-          <q-item v-for="(method, index) in item.methods" :key="index">
-            <q-item-section>
-              <q-item-label>{{ method.name }}</q-item-label>
-              <q-item-label caption>{{ method.status }}</q-item-label>
-            </q-item-section>
-            <q-item-section v-if="method.status === 'offline'" side>
-              <q-btn flat round dense icon="link" @click="setOnline(method)" />
-            </q-item-section>
-          </q-item>
-        </q-list>
+          <q-tab name="basicInfo" label="Basic Info" />
+          <q-tab name="methods" label="Methods" />
+        </q-tabs>
+        <q-separator />
+        <q-tab-panels v-model="tab" animated>
+          <q-tab-panel name="basicInfo">
+            <q-input v-model="title" label="Title">
+              <template v-slot:prepend>
+                <q-icon name="title" />
+              </template>
+            </q-input>
+            <q-input v-model="description" label="Description">
+              <template v-slot:prepend>
+                <q-icon name="description" />
+              </template>
+            </q-input>
+            <q-select v-model="icon" :options="iconOptions" label="Icon">
+              <template v-slot:prepend>
+                <q-icon name="insert_emoticon" />
+              </template>
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-icon :name="scope.opt" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-select v-model="color" :options="colorOptions" label="Color">
+              <template v-slot:prepend>
+                <q-icon name="color_lens" />
+              </template>
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label :class="'text-' + scope.opt">{{
+                      scope.opt
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-input
+              v-model="privateKey"
+              label="Private Key"
+              readonly
+              :type="privateKeyType"
+            >
+              <template v-slot:prepend>
+                <q-icon name="password" />
+              </template>
+              <template v-slot:append>
+                <q-icon
+                  :name="
+                    privateKeyType === 'password'
+                      ? 'visibility'
+                      : 'visibility_off'
+                  "
+                  @click="togglePrivateKeyVisibility"
+                  class="cursor-pointer"
+                />
+              </template>
+            </q-input>
+            <q-input v-model="publicKey" label="Public Key" readonly>
+              <template v-slot:prepend>
+                <q-icon name="vpn_key" />
+              </template>
+            </q-input>
+          </q-tab-panel>
+          <q-tab-panel name="methods">
+            <div class="row items-center q-mt-md">
+              <q-icon name="cloud" size="2.5em" class="q-mr-md" />
+              <div>
+                <q-item-label class="text-h6">Methods</q-item-label>
+              </div>
+              <q-space />
+              <q-btn flat round dense icon="add" />
+            </div>
+            <q-separator class="q-mt-md" />
+            <q-list>
+              <q-item v-for="(method, index) in item.methods" :key="index">
+                <q-item-section>
+                  <q-item-label>{{ method.name }}</q-item-label>
+                  <q-item-label caption>{{ method.status }}</q-item-label>
+                </q-item-section>
+                <q-item-section v-if="method.status === 'offline'" side>
+                  <q-btn
+                    flat
+                    round
+                    dense
+                    icon="link"
+                    @click="setOnline(method)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-tab-panel>
+        </q-tab-panels>
       </q-card-section>
       <q-card-actions>
         <q-btn
+          v-if="false"
           color="secondary"
           label="Graph"
           @click="showGraph"
@@ -121,6 +148,8 @@ import { Ref } from 'vue';
 const prop = defineProps<{
   item: MaskItem;
 }>();
+
+const tab = ref('basicInfo');
 
 const passwordMask = '********';
 const title = ref(prop.item.title);
