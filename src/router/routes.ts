@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
       { path: '/mask', component: () => import('pages/MaskPage.vue') },
       { path: '/meta', component: () => import('pages/MetaPage.vue') },
       { path: '/explore', component: () => import('pages/ExplorePage.vue') },
+      { path: '/graph', component: () => import('pages/GraphPage.vue') },
     ],
   },
 

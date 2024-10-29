@@ -86,6 +86,11 @@ const linksList: EssentialLinkProps[] = [
     icon: 'public',
     link: '/explore',
   },
+  {
+    title: 'Graph',
+    icon: 'hub',
+    link: '/graph',
+  },
 ];
 
 const leftDrawerOpen = ref(false);
