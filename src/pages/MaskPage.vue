@@ -20,13 +20,27 @@
         </q-card-section>
         <q-separator />
         <q-card-section>
-          <div class="row">
-            <div class="col">
-              <q-item-label caption>Attribute 1</q-item-label>
-            </div>
-            <div class="col">
-              <q-item-label caption>Attribute 2</q-item-label>
-            </div>
+          <div
+            v-for="(method, index) in item.methods"
+            :key="index"
+            class="row items-center q-mb-sm"
+          >
+            <q-item-label>
+              {{ method.name }}
+              : did:mm:0000000000000000000000000000000001
+            </q-item-label>
+            <q-space />
+            <q-item-label caption>
+              <q-icon
+                :name="
+                  method.status === 'online' ? 'check_circle' : 'highlight_off'
+                "
+                :color="method.status === 'online' ? 'green' : 'grey'"
+                size="1.5em"
+                class="q-mr-sm"
+              />
+              {{ method.status }}</q-item-label
+            >
           </div>
         </q-card-section>
       </q-card>

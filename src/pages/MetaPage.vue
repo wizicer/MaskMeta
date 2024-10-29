@@ -2,7 +2,7 @@
   <q-page>
     <q-banner
       inline-actions
-      class="bg-info text-white full-width"
+      class="bg-info text-white full-width q-py-md"
       v-if="showBanner"
     >
       <template v-slot:avatar>
