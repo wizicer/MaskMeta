@@ -62,6 +62,7 @@
                 label="Get Proof Now"
                 color="primary"
                 class="q-mt-md"
+                @click="getProof(item)"
               />
               <q-btn
                 v-else
@@ -83,6 +84,8 @@
 import { CredentialCategory, CredentialItem, Issuer } from 'src/models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed } from 'vue';
+import { Dialog } from 'quasar';
+import IssueProofDialog from 'components/IssueProofDialog.vue';
 
 const store = useVaultStore();
 
@@ -119,6 +122,29 @@ const itemCategories = computed(() => {
     {} as Record<string, CredentialItem[]>,
   );
 });
+
+function getProof(item: CredentialItem) {
+  Dialog.create({
+    component: IssueProofDialog,
+    // item.name == 'zkTwitter'
+    //   ? import('src/components/IssueProofDialog.vue')
+    //   : import('src/components/IssueProofDialog.vue'),
+
+    // props forwarded to your custom component
+    componentProps: {
+      item,
+    },
+  })
+    .onOk(() => {
+      console.log('OK');
+    })
+    .onCancel(() => {
+      console.log('Cancel');
+    })
+    .onDismiss(() => {
+      console.log('Called on OK or Cancel');
+    });
+}
 </script>
 
 <style lang="scss" scoped>

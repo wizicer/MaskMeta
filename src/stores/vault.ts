@@ -117,6 +117,7 @@ const credentialItems: CredentialItem[] = [
     category: 'Social',
     description: 'Credential linking an account to a Twitter profile.',
     avatar: 'https://via.placeholder.com/64',
+    available: true,
   },
   {
     name: 'Google Email',
