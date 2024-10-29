@@ -21,25 +21,20 @@
 
     <div class="row q-mx-md">
       <q-list class="full-width" style="max-width: 600px">
-        <q-card
-          v-for="(k, i) in items"
-          :key="i"
-          class="full-width q-my-md"
-          @click="showThisItem(k)"
-        >
+        <q-card v-for="(item, i) in items" :key="i" class="full-width q-my-md">
           <q-card-section class="row items-center">
-            <div class="text-h6">{{ k.title }}</div>
+            <div class="text-h6">{{ item.title }}</div>
             <q-space />
-            <q-btn flat round dense icon="qr_code" />
-            <q-btn flat round dense icon="more_vert" />
+            <q-btn flat dense icon="qr_code" />
+            <q-btn flat dense icon="more_vert" @click="showThisItem(item)" />
           </q-card-section>
           <q-separator />
           <q-card-section>
-            <div>{{ k.description }}</div>
+            <div>{{ item.description }}</div>
           </q-card-section>
           <q-card-section class="row items-center">
-            <div class="text-subtitle2">{{ k.date }}</div>
-            <template v-if="k.verified">
+            <div class="text-subtitle2">{{ item.date }}</div>
+            <template v-if="item.verified">
               <q-icon name="verified" class="q-ml-sm text-green" />
               <span class="text-green q-ml-sm">Valid</span>
             </template>
@@ -51,7 +46,7 @@
             <div class="relative-position">
               <div class="absolute-bottom-right">
                 <q-avatar size="64px">
-                  <q-icon :name="k.icon" />
+                  <q-icon :name="item.icon" />
                 </q-avatar>
               </div>
             </div>
@@ -97,7 +92,7 @@ defineOptions({
 
 const store = useVaultStore();
 
-const items = computed(() => store.items);
+const items = computed(() => store.metaItems);
 
 const showBanner = ref(true);
 

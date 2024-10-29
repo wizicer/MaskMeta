@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { MetaItem } from '../models/entity';
+import { MetaItem, MaskItem } from '../models/entity';
 
-const items: MetaItem[] = [
+const metaItems: MetaItem[] = [
   {
     title: 'Meta 1',
     description: 'This is a description for Meta 1.',
@@ -18,20 +18,40 @@ const items: MetaItem[] = [
   },
 ];
 
+const maskItems: MaskItem[] = [
+  {
+    title: 'Mask 1',
+    description: 'Comment of Mask 1',
+    privateKey: 'pri',
+    publicKey: 'pub',
+    methods: [
+      {
+        name: 'mm',
+        status: 'offline',
+      },
+    ],
+    icon: 'face',
+  },
+];
+
 export const useVaultStore = defineStore('vault', {
   state: () => ({
-    items,
+    metaItems,
+    maskItems,
   }),
 
   getters: {
     count(state) {
-      return state.items.length;
+      return state.metaItems.length;
     },
   },
 
   actions: {
-    newItem(item: MetaItem) {
-      this.items.push(item);
+    newMetaItem(metaItem: MetaItem) {
+      this.metaItems.push(metaItem);
+    },
+    newMaskItem(maskItem: MaskItem) {
+      this.maskItems.push(maskItem);
     },
   },
 });
