@@ -20,3 +20,24 @@ export interface MaskItem {
   }[];
   icon: string;
 }
+
+export interface Issuer {
+  name: string;
+  title: string;
+  description: string;
+  avatar: string;
+}
+
+export interface CredentialItem {
+  name: string;
+  issuer: string;
+  category: string;
+  description: string;
+  avatar: string;
+  available?: boolean;
+}
+
+export interface CredentialCategory {
+  name: string;
+  icon: string;
+}
