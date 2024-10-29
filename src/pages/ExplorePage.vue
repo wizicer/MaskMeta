@@ -20,9 +20,14 @@
         >
           <q-card-section class="row items-center">
             <div class="col-3 text-center">
-              <q-avatar size="64px">
-                <img :src="item.avatar" alt="Avatar" />
-              </q-avatar>
+              <div class="relative-position">
+                <q-avatar size="64px">
+                  <img src="../assets/issuer.jpg" alt="Avatar" />
+                </q-avatar>
+                <div class="text-black text-center">
+                  {{ item.name }}
+                </div>
+              </div>
             </div>
             <div class="col-9">
               <div class="row justify-between items-start">

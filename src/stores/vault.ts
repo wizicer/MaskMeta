@@ -112,6 +112,13 @@ const credentialItems: CredentialItem[] = [
     avatar: 'https://via.placeholder.com/64',
   },
   {
+    name: 'zkTwitter',
+    issuer: 'self',
+    category: 'Social',
+    description: 'Credential linking an account to a Twitter profile.',
+    avatar: 'https://via.placeholder.com/64',
+  },
+  {
     name: 'Google Email',
     issuer: 'maskmeta',
     category: 'Social',
