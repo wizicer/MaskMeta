@@ -7,6 +7,7 @@
         class="q-mb-md"
         clickable
         v-ripple
+        @click="showThisItem(item)"
       >
         <q-card-section>
           <div class="row items-center">
@@ -48,6 +49,31 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useVaultStore } from 'stores/vault';
+import { Dialog } from 'quasar';
+import MaskDetailDialog from 'components/MaskDetailDialog.vue';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function showThisItem(item: any) {
+  console.log(item);
+
+  Dialog.create({
+    component: MaskDetailDialog,
+
+    // props forwarded to your custom component
+    componentProps: {
+      item,
+    },
+  })
+    .onOk(() => {
+      console.log('OK');
+    })
+    .onCancel(() => {
+      console.log('Cancel');
+    })
+    .onDismiss(() => {
+      console.log('Called on OK or Cancel');
+    });
+}
 
 defineOptions({
   name: 'MaskPage',

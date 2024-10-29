@@ -19,6 +19,7 @@ export interface MaskItem {
     status: ItemAvailability;
   }[];
   icon: string;
+  color?: string;
 }
 
 export interface Issuer {
