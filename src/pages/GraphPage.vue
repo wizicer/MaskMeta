@@ -30,14 +30,14 @@ const nodes = store.maskItems
   .map((item) => ({
     id: index++,
     label: item.title,
-    shape: 'box',
-    color: '#97C2FC',
+    shape: 'circle',
+    color: '#FCC297',
   }))
   .concat(
     store.metaItems.map((item) => ({
       id: index++,
       label: item.title,
-      shape: 'circle',
+      shape: 'box',
       color: '#7BE141',
     })),
   );
