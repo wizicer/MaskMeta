@@ -33,7 +33,7 @@ const maskItems: MaskItem[] = [
     methods: [
       {
         name: 'mm',
-        status: 'offline',
+        status: 'online',
       },
     ],
     icon: 'face',
@@ -128,6 +128,56 @@ const credentialItems: CredentialItem[] = [
   },
 ];
 
+const didMethods = [
+  {
+    name: 'maskmeta',
+    vendor: 'MaskMeta',
+    title: 'MaskMeta Server',
+    description:
+      'Store DID document on the MaskMeta server for later retrieval.',
+    icon: 'public',
+    prefix: 'mm',
+    color: 'purple-2',
+    promotions: [
+      {
+        label: 'Free',
+        color: 'green-5',
+      },
+      {
+        label: 'Private',
+        color: 'blue-4',
+      },
+    ],
+    texts: {
+      offline: 'Upload',
+      online: 'Uploaded',
+    },
+  },
+  {
+    name: 'pinata',
+    vendor: 'Pinata',
+    title: 'Pinata Service',
+    description: 'Store DID document on the IPFS through the Pinata service.',
+    icon: 'push_pin',
+    prefix: 'pin',
+    color: 'brown-2',
+    promotions: [
+      {
+        label: 'IPFS',
+        color: 'blue-7',
+      },
+      {
+        label: 'Public',
+        color: 'orange-5',
+      },
+    ],
+    texts: {
+      offline: 'Upload',
+      online: 'Uploaded',
+    },
+  },
+];
+
 const credentialIssuers = {
   categories: credentialCategories,
   issuers,
@@ -139,6 +189,7 @@ export const useVaultStore = defineStore('vault', {
     metaItems,
     maskItems,
     credentialIssuers,
+    didMethods,
   }),
 
   getters: {
