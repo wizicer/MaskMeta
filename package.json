@@ -6,7 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
-
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -15,6 +14,7 @@
     "@web5/credentials": "^1.1.1",
     "@web5/dids": "^1.1.5",
     "body-parser": "^1.20.3",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "pinata": "^1.7.2"
   }
 }
