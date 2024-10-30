@@ -1,21 +1,16 @@
 <template>
   <q-page class="row q-ma-md">
     <q-list class="full-width" style="max-width: 600px">
-      <q-card
-        v-for="(item, i) in items"
-        :key="i"
-        class="q-mb-md"
-        clickable
-        v-ripple
-        @click="showThisItem(item)"
-      >
-        <q-card-section>
+      <q-card v-for="(item, i) in items" :key="i" class="q-mb-md">
+        <q-card-section clickable v-ripple @click="showThisItem(item)">
           <div class="row items-center">
             <q-icon name="face" size="2.5em" class="q-mr-md" />
             <div>
               <q-item-label>{{ item.title }}</q-item-label>
               <q-item-label caption>{{ item.description }}</q-item-label>
             </div>
+            <q-space />
+            <q-icon name="keyboard_arrow_right" size="2em" />
           </div>
         </q-card-section>
         <q-separator />
@@ -39,8 +34,17 @@
                 size="1.5em"
                 class="q-mr-sm"
               />
-              {{ method.status }}</q-item-label
-            >
+              {{ method.status }}
+            </q-item-label>
+          </div>
+          <div class="row justify-end q-mt-md">
+            <q-btn
+              flat
+              dense
+              label="Manage"
+              color="primary"
+              @click="manageDid(item)"
+            />
           </div>
         </q-card-section>
       </q-card>
@@ -65,6 +69,7 @@ import { computed } from 'vue';
 import { useVaultStore } from 'stores/vault';
 import { Dialog } from 'quasar';
 import MaskDetailDialog from 'components/MaskDetailDialog.vue';
+import DidDetailDialog from 'components/DidDetailDialog.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function showThisItem(item: any) {
@@ -72,6 +77,27 @@ function showThisItem(item: any) {
 
   Dialog.create({
     component: MaskDetailDialog,
+
+    // props forwarded to your custom component
+    componentProps: {
+      item,
+    },
+  })
+    .onOk(() => {
+      console.log('OK');
+    })
+    .onCancel(() => {
+      console.log('Cancel');
+    })
+    .onDismiss(() => {
+      console.log('Called on OK or Cancel');
+    });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function manageDid(item: any) {
+  Dialog.create({
+    component: DidDetailDialog,
 
     // props forwarded to your custom component
     componentProps: {
