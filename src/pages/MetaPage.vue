@@ -25,8 +25,8 @@
           <q-card-section class="row items-center">
             <div class="text-h6">{{ item.title }}</div>
             <q-space />
-            <q-btn flat dense icon="qr_code" />
-            <q-btn flat dense icon="more_vert" @click="showThisItem(item)" />
+            <q-btn flat dense icon="qr_code" @click="showQrCode(item)" />
+            <q-btn flat dense icon="more_vert" @click="showDetail(item)" />
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -62,13 +62,37 @@ import { computed, ref } from 'vue';
 import { useVaultStore } from 'stores/vault';
 import { Dialog } from 'quasar';
 import MetaDetailDialog from 'components/MetaDetailDialog.vue';
+import MetaQrCodeDialog from 'components/MetaQrCodeDialog.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function showThisItem(item: any) {
+function showDetail(item: any) {
   console.log(item);
 
   Dialog.create({
     component: MetaDetailDialog,
+
+    // props forwarded to your custom component
+    componentProps: {
+      item,
+    },
+  })
+    .onOk(() => {
+      console.log('OK');
+    })
+    .onCancel(() => {
+      console.log('Cancel');
+    })
+    .onDismiss(() => {
+      console.log('Called on OK or Cancel');
+    });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function showQrCode(item: any) {
+  console.log(item);
+
+  Dialog.create({
+    component: MetaQrCodeDialog,
 
     // props forwarded to your custom component
     componentProps: {
