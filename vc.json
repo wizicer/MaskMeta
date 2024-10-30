@@ -1,0 +1,30 @@
+{
+  "proof": {
+    "type": "Ed25519Signature",
+    "created": "2024-10-30T03:45:22.205Z",
+    "proofPurpose": "assertionMethod",
+    "jws": "WRc-fomCTvdwx9Nqlt16WKT2IdtddlrwXCipDcobIPKv1OPminGJYV_TcS70-IrGuEhcRKX-mPgnwMKbxqUCDQ"
+  },
+  "@context": "https://schema.arcblock.io/v0.1/context.jsonld",
+  "id": "z2iTuiRn91NnacdeU9a4t66ZXdofmEN51b77a",
+  "type": "MedicalReport",
+  "issuer": {
+    "id": "z1TF2ino6mMR94bY9MmwjuQM6twH38vTF8M",
+    "pk": "z5Rhj28wmytrpHwAk3y4CuJyXg6JLGqU4bP51ZThSV8r7",
+    "name": "Good Hospital"
+  },
+  "issuanceDate": "2024-10-30T03:45:22.205Z",
+  "credentialSubject": {
+    "id": "z1URRHhJB4J53gKbxuVfaM2eQ2vbjEYKmkj",
+    "reportId": "1",
+    "patientInfo": {
+      "patientId": "1",
+      "fullName": "Bob",
+      "dateOfBirth": "1998"
+    },
+    "vitalSigns": {
+      "bloodPressure": "100",
+      "heartRate": "100"
+    }
+  }
+}

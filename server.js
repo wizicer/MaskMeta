@@ -4,8 +4,13 @@ import { create} from '@arcblock/vc';
 import { fromRandom, fromSecretKey, fromAddress } from '@ocap/wallet';
 import { VerifiableCredential } from "@web5/credentials";
 import { DidJwk } from '@web5/dids'
+import { fileURLToPath } from 'url';
+import { isValid }from '@arcblock/did';
 import { PinataSDK } from "pinata";
-
+import fs from 'fs';
+import path from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(express.json());
@@ -16,7 +21,10 @@ const holder = fromRandom();
 
 app.post('/request_vc_arcblock', async (req, res) => {
     try {
-        const {reportId,patientId} = req.body; 
+        const {reportId,patientId,recipientDid} = req.body; 
+        if (!isValid(recipientDid) && recipientDid !== undefined) {
+            return res.status(400).send({ error: 'Invalid recipient DID' });
+        }
         const vc = create({
             type: "MedicalReport",
             issuer: {
@@ -24,7 +32,7 @@ app.post('/request_vc_arcblock', async (req, res) => {
                 wallet: issuer,
             },
             subject: {
-                id: holder.address,//这个地方是required，这里使用random holder填充
+                id:  recipientDid || holder.address,//这个地方是required，这里使用random holder填充
                 reportId,
                 patientInfo:{
                     patientId,
@@ -45,8 +53,62 @@ app.post('/request_vc_arcblock', async (req, res) => {
     }
 });
 
+//tbd
+app.post('/request_vc_tbd', async (req, res) => {
+    try {
+        
+        //Creates a DID using the did:jwk method
+        const employer_didJwk = await DidJwk.create();
 
-app.post('/vc_upload', async (req, res) => {
+        const {reportId,patientId,recipientDid} = req.body; 
+
+        const vc = await VerifiableCredential.create({
+            type: 'EmploymentCredential',
+            issuer: "1",
+            subject: "1",
+            expirationDate: '2023-09-30T12:34:56Z',
+            data: {
+              "position": "Software Developer",
+              "startDate": "2023-04-01T12:34:56Z",
+              "employmentStatus": "Contractor",
+              id:recipientDid || "",
+              reportId,
+                patientInfo:{
+                    patientId,
+                    fullName:"Bob",
+                    dateOfBirth:"1998"
+                },
+                vitalSigns:{
+                    bloodPressure:"100",
+                    heartRate:"100"
+                }
+            }
+          });
+        const vc_jwt_employment = await vc.sign({ did: employer_didJwk });
+        res.json(vc_jwt_employment);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+});
+
+app.post('/vc_upload_server', async (req, res) => {
+    try {
+        const {vc} = req.body;
+        // Define the file path
+        const filePath = path.join(__dirname, 'vc.json');
+
+        // Write the VC to a file
+        fs.writeFileSync(filePath, JSON.stringify(vc, null, 2));
+
+        res.json({ message: 'VC stored locally', path: filePath });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+});
+
+app.post('/vc_upload_pinata', async (req, res) => {
     try {
         const {vc} = req.body;
         const pinata = new PinataSDK({
@@ -105,43 +167,6 @@ app.post('/vc_upload', async (req, res) => {
 //     }
 // });
 
-//tbd
-app.post('/request_vc_tbd', async (req, res) => {
-    try {
-        
-        //Creates a DID using the did:jwk method
-        const employer_didJwk = await DidJwk.create();
-
-        const {reportId,patientId} = req.body; 
-
-        const vc = await VerifiableCredential.create({
-            type: 'EmploymentCredential',
-            issuer: "1",
-            subject: "1",
-            expirationDate: '2023-09-30T12:34:56Z',
-            data: {
-              "position": "Software Developer",
-              "startDate": "2023-04-01T12:34:56Z",
-              "employmentStatus": "Contractor",
-              reportId,
-                patientInfo:{
-                    patientId,
-                    fullName:"Bob",
-                    dateOfBirth:"1998"
-                },
-                vitalSigns:{
-                    bloodPressure:"100",
-                    heartRate:"100"
-                }
-            }
-          });
-        const vc_jwt_employment = await vc.sign({ did: employer_didJwk });
-        res.json(vc_jwt_employment);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: 'Internal server error' });
-    }
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
