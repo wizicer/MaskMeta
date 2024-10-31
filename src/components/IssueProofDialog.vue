@@ -24,7 +24,7 @@
       <q-separator />
 
       <q-card-section>
-        <q-form>
+        <template v-if="item.name === 'zkTwitter'">
           <q-file
             v-model="file"
             label="Upload email .eml file"
@@ -32,30 +32,37 @@
             outlined
             clearable
           />
-          <q-select
-            v-model="mask"
-            :options="maskOptions"
-            label="Mask selection"
-            outlined
-            clearable
-            class="q-mt-md"
-          >
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.title }}</q-item-label>
-                  <q-item-label caption>
-                    {{ scope.opt.description }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:selected-item="scope">
-              <q-item-label>{{ scope.opt.title }}</q-item-label>
-            </template>
-          </q-select>
-        </q-form>
+        </template>
+
+        <template v-else-if="item.name === 'Medical Report'">
+          <q-input v-model="patientId" label="Patient ID" outlined clearable />
+          <q-input v-model="reportId" label="Report ID" outlined clearable />
+        </template>
+
+        <q-select
+          v-model="mask"
+          :options="maskOptions"
+          label="Mask selection"
+          outlined
+          clearable
+          class="q-mt-md"
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section>
+                <q-item-label>{{ scope.opt.title }}</q-item-label>
+                <q-item-label caption>
+                  {{ scope.opt.description }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+          <template v-slot:selected-item="scope">
+            <q-item-label>{{ scope.opt.title }}</q-item-label>
+          </template>
+        </q-select>
       </q-card-section>
+
       <q-card-actions align="right">
         <q-btn color="secondary" label="Prove" @click="onOkClick" />
       </q-card-actions>
@@ -70,6 +77,9 @@ import { useVaultStore } from 'src/stores/vault';
 import { computed, ref } from 'vue';
 
 const store = useVaultStore();
+
+const patientId = ref('');
+const reportId = ref('');
 
 const issuers = computed(() => {
   const issuersDict = store.credentialIssuers.issuers.reduce(
