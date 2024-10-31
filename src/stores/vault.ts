@@ -5,6 +5,7 @@ import {
   CredentialCategory,
   CredentialItem,
   Issuer,
+  DIDMethod,
 } from '../models/entity';
 
 const metaItems: MetaItem[] = [
@@ -171,7 +172,7 @@ const credentialItems: CredentialItem[] = [
   },
 ];
 
-const didMethods = [
+const didMethods: DIDMethod[] = [
   {
     name: 'maskmeta',
     vendor: 'MaskMeta',
@@ -247,6 +248,22 @@ export const useVaultStore = defineStore('vault', {
     },
     newMaskItem(maskItem: MaskItem) {
       this.maskItems.push(maskItem);
+    },
+    newMaskMethod(maskItem: MaskItem, method: DIDMethod) {
+      const foundMaskItem = this.maskItems.find(
+        (item) => item.title === maskItem.title,
+      );
+      if (foundMaskItem) {
+        const existingMethod = foundMaskItem.methods.find(
+          (m) => m.name === method.name,
+        );
+        if (!existingMethod) {
+          foundMaskItem.methods.push({
+            name: method.prefix,
+            status: 'offline',
+          });
+        }
+      }
     },
   },
 });

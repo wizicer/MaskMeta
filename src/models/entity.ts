@@ -1,5 +1,5 @@
 export type ItemAvailability = 'online' | 'offline';
-export type SupportedMethodName = 'mm' | 'dht' | 'eth';
+export type SupportedMethodName = 'mm' | 'dht' | 'eth' | 'pin';
 
 export interface MetaItem {
   title: string;
@@ -40,4 +40,24 @@ export interface CredentialItem {
 export interface CredentialCategory {
   name: string;
   icon: string;
+}
+
+interface Promotion {
+  label: string;
+  color: string;
+}
+
+export interface DIDMethod {
+  name: string;
+  vendor: string;
+  title: string;
+  description: string;
+  icon: string;
+  prefix: SupportedMethodName;
+  color: string;
+  promotions: Promotion[];
+  texts: {
+    offline: string;
+    online: string;
+  };
 }

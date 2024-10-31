@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
-import { MaskItem } from '../models/entity';
+import { MaskItem, DIDMethod } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed } from 'vue';
 
@@ -168,8 +168,7 @@ import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function enable(method: any) {
+function enable(method: DIDMethod) {
   if (!enabled.value[method.prefix]) {
     $q.notify({
       type: 'negative',
@@ -178,6 +177,7 @@ function enable(method: any) {
     });
     return;
   }
-  // TODO: Enable logic here
+  console.log(method);
+  store.newMaskMethod(prop.item, method);
 }
 </script>

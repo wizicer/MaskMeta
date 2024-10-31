@@ -25,28 +25,46 @@ const store = useVaultStore();
 //   { id: 4, label: 'Node 4' },
 // ];
 
-let index = 1;
+// let index = 1;
 const nodes = store.maskItems
   .map((item) => ({
-    id: index++,
+    id: `node-${item.title}`,
     label: item.title,
-    shape: 'circle',
+    shape: '',
     color: '#FCC297',
   }))
   .concat(
+    store.maskItems.flatMap((item) =>
+      item.methods.map((method) => ({
+        id: `method-${item.title}-${method.name}`,
+        label: `did:${method.name}:..`,
+        shape: 'box',
+        color: method.status === 'offline' ? '#CCCCCC' : '#90EE90',
+      })),
+    ),
+  )
+  .concat(
     store.metaItems.map((item) => ({
-      id: index++,
+      id: `meta-${item.title}`,
       label: item.title,
       shape: 'box',
-      color: '#7BE141',
+      color: '#E1A1BB',
     })),
   );
 
-const edges = [
-  // { from: 1, to: 3 },
-  { from: 1, to: 2 },
-  { from: 2, to: 4 },
-];
+// const edges = [
+//   // { from: 1, to: 3 },
+//   // { from: 'node-1', to: 'node-2' },
+//   // { from: 'node-2', to: 'node-4' },
+// ];
+const edges = store.maskItems.flatMap((item) =>
+  item.methods.map((method) => ({
+    from: `node-${item.title}`,
+    to: `method-${item.title}-${method.name}`,
+    color: '#444444',
+    dashes: method.status === 'offline',
+  })),
+);
 const options = {
   manipulation: {
     enabled: true,
