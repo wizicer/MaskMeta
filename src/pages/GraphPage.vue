@@ -2,6 +2,7 @@
   <q-page class="row q-ma-md">
     <div id="mynetwork"></div>
     History List:
+    <HistoryComponent />
   </q-page>
 </template>
 
@@ -9,6 +10,7 @@
 import { computed } from 'vue';
 import { useVaultStore } from 'stores/vault';
 import { Network } from 'vis-network';
+import HistoryComponent from 'components/HistoryComponent.vue';
 
 defineOptions({
   name: 'MaskPage',
