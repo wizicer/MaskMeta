@@ -25,7 +25,32 @@
           <q-card-section class="row items-center">
             <div class="text-h6">{{ item.title }}</div>
             <q-space />
-            <q-btn flat dense icon="qr_code" @click="showQrCode(item)" />
+            <q-btn flat dense icon="qr_code">
+              <q-menu>
+                <q-list style="min-width: 100px">
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="showQrCode(item, 'full')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="account_circle" />
+                    </q-item-section>
+                    <q-item-section>Expose Full Data</q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="showQrCode(item, 'privacy')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="privacy_tip" />
+                    </q-item-section>
+                    <q-item-section>Privacy by ZKP</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
             <q-btn flat dense icon="more_vert" @click="showDetail(item)" />
           </q-card-section>
           <q-separator />
@@ -88,26 +113,28 @@ function showDetail(item: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function showQrCode(item: any) {
+function showQrCode(item: any, option: 'full' | 'privacy') {
   console.log(item);
 
-  Dialog.create({
-    component: MetaQrCodeDialog,
+  if (option === 'full') {
+    Dialog.create({
+      component: MetaQrCodeDialog,
 
-    // props forwarded to your custom component
-    componentProps: {
-      item,
-    },
-  })
-    .onOk(() => {
-      console.log('OK');
+      // props forwarded to your custom component
+      componentProps: {
+        item,
+      },
     })
-    .onCancel(() => {
-      console.log('Cancel');
-    })
-    .onDismiss(() => {
-      console.log('Called on OK or Cancel');
-    });
+      .onOk(() => {
+        console.log('OK');
+      })
+      .onCancel(() => {
+        console.log('Cancel');
+      })
+      .onDismiss(() => {
+        console.log('Called on OK or Cancel');
+      });
+  }
 }
 
 defineOptions({
