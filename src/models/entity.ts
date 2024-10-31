@@ -33,7 +33,7 @@ export interface CredentialItem {
   issuer: string;
   category: string;
   description: string;
-  avatar: string;
+  avatar?: string;
   available?: boolean;
 }
 

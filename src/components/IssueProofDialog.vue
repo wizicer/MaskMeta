@@ -33,10 +33,24 @@
             clearable
           />
         </template>
-
         <template v-else-if="item.name === 'Medical Report'">
           <q-input v-model="patientId" label="Patient ID" outlined clearable />
           <q-input v-model="reportId" label="Report ID" outlined clearable />
+        </template>
+        <template v-else-if="item.name === 'Address'">
+          <q-input v-model="address" label="Address" outlined clearable />
+        </template>
+        <template v-else-if="item.name === 'Text'">
+          <q-input v-model="text" label="Text" outlined clearable />
+        </template>
+        <template v-else-if="item.name === 'Image'">
+          <q-file
+            v-model="imageFile"
+            label="Upload Image"
+            accept="image/*"
+            outlined
+            clearable
+          />
         </template>
 
         <q-select
@@ -80,6 +94,9 @@ const store = useVaultStore();
 
 const patientId = ref('');
 const reportId = ref('');
+const address = ref('');
+const text = ref('');
+const imageFile = ref<File | null>(null);
 
 const issuers = computed(() => {
   const issuersDict = store.credentialIssuers.issuers.reduce(

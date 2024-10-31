@@ -44,6 +44,7 @@ const credentialCategories: CredentialCategory[] = [
   { name: 'Demographic', icon: 'face' },
   { name: 'Financial', icon: 'currency_exchange' },
   { name: 'Social', icon: 'diversity_3' },
+  { name: 'Anything', icon: 'apps' },
 ];
 
 const issuers: Issuer[] = [
@@ -86,6 +87,29 @@ const issuers: Issuer[] = [
 ];
 
 const credentialItems: CredentialItem[] = [
+  {
+    name: 'Address',
+    issuer: 'self',
+    category: 'Anything',
+    description: 'The onchain address you want to associate with your Mask',
+    available: true,
+  },
+  {
+    name: 'Text',
+    issuer: 'self',
+    category: 'Anything',
+    description:
+      'Any text that can be issued by yourself to be wrapped in a Meta',
+    available: true,
+  },
+  {
+    name: 'Image',
+    issuer: 'self',
+    category: 'Anything',
+    description:
+      'Any image that can be issued by yourself to be wrapped in a Meta',
+    available: true,
+  },
   {
     name: 'Medical Report',
     issuer: 'hospital',
