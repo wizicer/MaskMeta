@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
       { path: '/meta', component: () => import('pages/MetaPage.vue') },
       { path: '/explore', component: () => import('pages/ExplorePage.vue') },
       { path: '/graph', component: () => import('pages/GraphPage.vue') },
+      {
+        path: '/proof_request',
+        component: () => import('pages/ProofRequestPage.vue'),
+      },
     ],
   },
 
