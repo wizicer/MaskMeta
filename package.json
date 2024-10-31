@@ -37,6 +37,7 @@
     "vis-data": "^7.1.9",
     "vis-network": "^9.1.9",
     "vite-plugin-checker": "^0.8.0",
+    "vue-qrcode-reader": "^5.5.11",
     "vue-tsc": "^2.0.29"
   },
   "engines": {

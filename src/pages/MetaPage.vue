@@ -88,6 +88,7 @@ import { useVaultStore } from 'stores/vault';
 import { Dialog } from 'quasar';
 import MetaDetailDialog from 'components/MetaDetailDialog.vue';
 import MetaQrCodeDialog from 'components/MetaQrCodeDialog.vue';
+import MetaZkpDialog from 'components/MetaZkpDialog.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function showDetail(item: any) {
@@ -119,6 +120,24 @@ function showQrCode(item: any, option: 'full' | 'privacy') {
   if (option === 'full') {
     Dialog.create({
       component: MetaQrCodeDialog,
+
+      // props forwarded to your custom component
+      componentProps: {
+        item,
+      },
+    })
+      .onOk(() => {
+        console.log('OK');
+      })
+      .onCancel(() => {
+        console.log('Cancel');
+      })
+      .onDismiss(() => {
+        console.log('Called on OK or Cancel');
+      });
+  } else {
+    Dialog.create({
+      component: MetaZkpDialog,
 
       // props forwarded to your custom component
       componentProps: {
