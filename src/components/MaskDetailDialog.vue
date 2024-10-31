@@ -72,11 +72,6 @@
             />
           </template>
         </q-input>
-        <q-input v-model="publicKey" label="Public Key" readonly>
-          <template v-slot:prepend>
-            <q-icon name="vpn_key" />
-          </template>
-        </q-input>
       </q-card-section>
       <q-card-actions>
         <q-btn
@@ -111,7 +106,6 @@ const icon = ref(prop.item.icon);
 const color = ref(prop.item.color ?? '');
 const privateKey = ref(passwordMask);
 const privateKeyType: Ref<'password' | 'text'> = ref('password');
-const publicKey = ref(prop.item.publicKey);
 
 const iconOptions = [
   'face',

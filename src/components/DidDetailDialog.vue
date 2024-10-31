@@ -45,8 +45,20 @@
             :key="i"
             class="q-pa-md q-my-md"
           >
-            <div class="text-subtitle1 text-weight-medium">
-              {{ method.vendor }}
+            <div class="row items-center">
+              <div class="text-subtitle1 text-weight-medium">
+                {{ method.vendor }}
+                <q-badge color="primary" class="q-ml-sm">
+                  did:{{ method.prefix }}:...
+                </q-badge>
+              </div>
+              <q-space />
+              <q-toggle
+                v-model="enabled[method.prefix]"
+                color="primary"
+                class="q-mr-md"
+                @update:model-value="enable(method)"
+              />
             </div>
             <div class="text-caption text-grey-6">
               {{ method.description }}
@@ -125,6 +137,22 @@ const doneMethods = computed(() => {
     {} as Record<string, boolean>,
   );
 });
+const enabled = computed(() => {
+  let o = prop.item.methods.reduce(
+    (acc, method) => {
+      acc[method.name] = method.status !== undefined ? true : false;
+      return acc;
+    },
+    {} as Record<string, boolean>,
+  );
+  methods.value.forEach((method) => {
+    if (!o[method.prefix]) {
+      o[method.prefix] = false;
+    }
+  });
+
+  return o;
+});
 console.log(doneMethods);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -135,4 +163,21 @@ function setOnline(method: any) {
 defineEmits([...useDialogPluginComponent.emits]);
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function enable(method: any) {
+  if (!enabled.value[method.prefix]) {
+    $q.notify({
+      type: 'negative',
+      message: 'Turn off the mask DID is not allowed.',
+      position: 'top',
+    });
+    return;
+  }
+  // TODO: Enable logic here
+}
 </script>

@@ -127,7 +127,6 @@ function addMask() {
     title: 'New Mask',
     description: 'This is a new mask',
     privateKey: 'pri',
-    publicKey: 'pub',
     methods: [
       {
         name: 'mm',

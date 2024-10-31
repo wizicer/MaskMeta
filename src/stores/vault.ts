@@ -29,7 +29,6 @@ const maskItems: MaskItem[] = [
     title: 'Mask 1',
     description: 'Comment of Mask 1',
     privateKey: 'pri',
-    publicKey: 'pub',
     methods: [
       {
         name: 'mm',
@@ -55,6 +54,12 @@ const issuers: Issuer[] = [
     avatar: 'https://via.placeholder.com/64',
   },
   {
+    name: 'zk',
+    title: 'ZKP Issuer',
+    description: 'Issuer using Zero knowledge Proof.',
+    avatar: 'https://via.placeholder.com/64',
+  },
+  {
     name: 'maskmeta',
     title: 'MaskMeta Server',
     description: 'Issuer for credentials issued by the MaskMeta server.',
@@ -72,9 +77,23 @@ const issuers: Issuer[] = [
     description: 'Issuer for credentials issued by an exchange platform.',
     avatar: 'https://via.placeholder.com/64',
   },
+  {
+    name: 'hospital',
+    title: 'Hospital',
+    description: 'Issuer for credentials issued by a hospital.',
+    avatar: 'https://via.placeholder.com/64',
+  },
 ];
 
 const credentialItems: CredentialItem[] = [
+  {
+    name: 'Medical Report',
+    issuer: 'hospital',
+    category: 'Demographic',
+    description: 'This is a detailed medical report issued by a hospital.',
+    avatar: 'https://via.placeholder.com/64',
+    available: true,
+  },
   {
     name: 'KYC Information',
     issuer: 'exchange',
@@ -113,7 +132,7 @@ const credentialItems: CredentialItem[] = [
   },
   {
     name: 'zkTwitter',
-    issuer: 'self',
+    issuer: 'zk',
     category: 'Social',
     description: 'Credential linking an account to a Twitter profile.',
     avatar: 'https://via.placeholder.com/64',

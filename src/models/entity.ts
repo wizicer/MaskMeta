@@ -13,7 +13,6 @@ export interface MaskItem {
   title: string;
   description: string;
   privateKey: string;
-  publicKey: string;
   methods: {
     name: SupportedMethodName;
     status: ItemAvailability;
