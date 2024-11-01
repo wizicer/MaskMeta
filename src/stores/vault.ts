@@ -8,6 +8,8 @@ import {
   DIDMethod,
   HistoryItem,
 } from '../models/entity';
+import { bech32m } from '@scure/base';
+import { DidJwk } from '@web5/dids';
 
 const metaItems: MetaItem[] = [
   // {
@@ -221,6 +223,44 @@ const didMethods: DIDMethod[] = [
       online: 'Uploaded',
     },
   },
+  {
+    name: 'tbd',
+    vendor: 'TBD',
+    title: 'TBD (Block)',
+    description: 'Through TBD blockchain network to store DID document.',
+    icon: 'calendar_today',
+    prefix: 'tbd',
+    color: 'teal-2',
+    promotions: [
+      {
+        label: 'Public',
+        color: 'orange-5',
+      },
+    ],
+    texts: {
+      offline: 'Publish',
+      online: 'Published',
+    },
+  },
+  {
+    name: 'arcblock',
+    vendor: 'Arcblock',
+    title: 'Arcblock',
+    description: 'Through Arcblock blockchain network to store DID document.',
+    icon: 'view_in_ar',
+    prefix: 'arc',
+    color: 'lime-2',
+    promotions: [
+      {
+        label: 'Public',
+        color: 'orange-5',
+      },
+    ],
+    texts: {
+      offline: 'Publish',
+      online: 'Published',
+    },
+  },
 ];
 
 const credentialIssuers = {
@@ -296,6 +336,9 @@ export const useVaultStore = defineStore('vault', {
     },
     newMaskItem(maskItem: MaskItem) {
       maskItem.id = this.index++;
+      if (!maskItem.privateKey) {
+        maskItem.privateKey = Math.random().toString(10).substring(2); // TODO: should use true random key
+      }
       this.maskItems.push(maskItem);
       this.history.push({
         id: this.history.length,
@@ -303,11 +346,11 @@ export const useVaultStore = defineStore('vault', {
         type: 'mask',
         vendor: 'unknown',
         status: 'offline',
-        payload: 'no',
+        payload: '',
         time: new Date(Date.now()),
       });
     },
-    newMaskMethod(maskItem: MaskItem, method: DIDMethod) {
+    async newMaskMethod(maskItem: MaskItem, method: DIDMethod) {
       const foundMaskItem = this.maskItems.find(
         (item) => item.title === maskItem.title,
       );
@@ -315,14 +358,59 @@ export const useVaultStore = defineStore('vault', {
         const existingMethod = foundMaskItem.methods.find(
           (m) => m.name === method.name,
         );
+
+        let did = '';
+        let document = '';
+        console.log(method.prefix);
+        switch (method.prefix) {
+          case 'mm':
+            did = bech32m.encode(
+              'did:mm:',
+              bech32m.toWords(await hash(maskItem.privateKey)),
+            );
+            break;
+
+          case 'pin':
+            did = bech32m.encode(
+              'did:pin:',
+              bech32m.toWords(await hash(maskItem.privateKey)),
+            );
+            break;
+
+          case 'tbd':
+            const didjwk = await DidJwk.create();
+            did = didjwk.uri;
+            document = JSON.stringify(await didjwk.export());
+            break;
+
+          case 'arc':
+            did = bech32m.encode(
+              'did:arc:',
+              bech32m.toWords(await hash(maskItem.privateKey)),
+            );
+            break;
+
+          default:
+            console.warn('Unsupported DID method prefix', method.prefix);
+            break;
+        }
+
         if (!existingMethod) {
           foundMaskItem.methods.push({
             name: method.prefix,
             status: 'offline',
-            document: '',
+            did,
+            document,
           });
         }
       }
     },
   },
 });
+
+async function hash(input: string): Promise<Uint8Array> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return new Uint8Array(hashBuffer);
+}

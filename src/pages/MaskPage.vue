@@ -20,10 +20,12 @@
             :key="index"
             class="row items-center q-mb-sm"
           >
-            <q-item-label>
-              {{ method.name }}
-              : did:mm:0000000000000000000000000000000001
-            </q-item-label>
+            <div class="ellipsis-container">
+              <q-tooltip>
+                {{ method.did }}
+              </q-tooltip>
+              <q-item-label class="ellipsis">{{ method.did }}</q-item-label>
+            </div>
             <q-space />
             <q-item-label caption>
               <q-icon
@@ -127,15 +129,26 @@ function addMask() {
     id: -1,
     title: 'New Mask',
     description: 'This is a new mask',
-    privateKey: 'pri',
-    methods: [
-      {
-        name: 'mm',
-        status: 'offline',
-        document: '',
-      },
-    ],
+    privateKey: '',
+    methods: [],
     icon: 'face',
   });
 }
 </script>
+
+<style scoped>
+.ellipsis-container {
+  max-width: 200px; /* Adjust the width as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

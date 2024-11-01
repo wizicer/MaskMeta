@@ -1,5 +1,5 @@
 export type ItemAvailability = 'online' | 'offline';
-export type SupportedMethodName = 'mm' | 'dht' | 'eth' | 'pin';
+export type SupportedMethodName = 'mm' | 'dht' | 'eth' | 'pin' | 'tbd' | 'arc';
 
 export interface MetaItem {
   id: number;
@@ -19,6 +19,7 @@ export interface MaskItem {
   methods: {
     name: SupportedMethodName;
     document: string;
+    did: string;
     status: ItemAvailability;
   }[];
   icon: string;

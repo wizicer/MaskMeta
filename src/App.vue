@@ -15,14 +15,8 @@ if (store.$state.maskItems.length == 0) {
     id: -1,
     title: 'Mask 1',
     description: 'Comment of Mask 1',
-    privateKey: 'pri',
-    methods: [
-      {
-        name: 'mm',
-        status: 'offline',
-        document: 'unknown',
-      },
-    ],
+    privateKey: '',
+    methods: [],
     icon: 'face',
   });
 
