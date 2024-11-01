@@ -54,9 +54,33 @@
         </template>
 
         <q-select
+          v-if="maskOptions.length > 0"
           v-model="mask"
           :options="maskOptions"
           label="Mask selection"
+          outlined
+          clearable
+          class="q-mt-md"
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section>
+                <q-item-label>{{ scope.opt.title }}</q-item-label>
+                <q-item-label caption>
+                  {{ scope.opt.description }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+          <template v-slot:selected-item="scope">
+            <q-item-label>{{ scope.opt.title }}</q-item-label>
+          </template>
+        </q-select>
+        <q-select
+          v-if="methodOptions.length > 0"
+          v-model="method"
+          :options="methodOptions"
+          label="Method selection"
           outlined
           clearable
           class="q-mt-md"
@@ -86,9 +110,10 @@
 
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
-import { CredentialItem } from '../models/entity';
+import { CredentialItem, MaskItem } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed, ref } from 'vue';
+import { Ref } from 'vue';
 
 const store = useVaultStore();
 
@@ -97,12 +122,23 @@ const reportId = ref('');
 const address = ref('');
 const text = ref('');
 const imageFile = ref<File | null>(null);
+const method = ref('');
+
+// Define a computed property for maskOptions
+const maskOptions = computed(() => store.maskItems);
+const mask: Ref<MaskItem | null> = ref(null);
+
+// Define a computed property for methodOptions that filters based on the selected mask
+const methodOptions = computed(() => {
+  if (!mask.value) return [];
+  return store.didMethods.filter((method) =>
+    mask.value.methods.some((_) => _.name == method.prefix),
+  );
+});
 
 const issuers = computed(() => store.issuerDict);
 
-const mask = ref('');
 const file = ref<File | null>(null);
-const maskOptions = computed(() => store.maskItems);
 
 defineProps<{
   item: CredentialItem;
