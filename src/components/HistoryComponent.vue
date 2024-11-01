@@ -22,7 +22,7 @@
             }}</strong>
           </template>
           <template v-slot:subtitle>
-            {{ entry.time }}
+            {{ formatTime(entry.time) }}
           </template>
         </q-timeline-entry>
       </q-timeline>
@@ -81,6 +81,15 @@ const selectedEntry: Ref<HistoryItem | null> = ref(null);
 const selectEntry = (entry: HistoryItem) => {
   selectedEntry.value = entry;
 };
+
+function formatTime(time: Date) {
+  const year = time.getFullYear();
+  const month = String(time.getMonth() + 1).padStart(2, '0');
+  const day = String(time.getDate()).padStart(2, '0');
+  const hours = String(time.getHours()).padStart(2, '0');
+  const minutes = String(time.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 </script>
 
 <style scoped>

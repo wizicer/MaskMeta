@@ -1,7 +1,7 @@
 <template>
   <q-page class="row q-ma-md">
     <div id="mynetwork"></div>
-    History List:
+    <h5>History List:</h5>
     <HistoryComponent />
   </q-page>
 </template>
