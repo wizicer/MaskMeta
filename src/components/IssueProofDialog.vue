@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
-import { CredentialItem, Issuer } from '../models/entity';
+import { CredentialItem } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed, ref } from 'vue';
 
@@ -98,22 +98,11 @@ const address = ref('');
 const text = ref('');
 const imageFile = ref<File | null>(null);
 
-const issuers = computed(() => {
-  const issuersDict = store.credentialIssuers.issuers.reduce(
-    (acc, issuer) => {
-      acc[issuer.name] = issuer;
-      return acc;
-    },
-    {} as Record<string, Issuer>,
-  );
-  return issuersDict;
-});
+const issuers = computed(() => store.issuerDict);
 
 const mask = ref('');
 const file = ref<File | null>(null);
-const maskOptions = computed(() => {
-  return store.maskItems;
-});
+const maskOptions = computed(() => store.maskItems);
 
 defineProps<{
   item: CredentialItem;

@@ -2,19 +2,23 @@ export type ItemAvailability = 'online' | 'offline';
 export type SupportedMethodName = 'mm' | 'dht' | 'eth' | 'pin';
 
 export interface MetaItem {
+  id: number;
   title: string;
   description: string;
   date: string;
   icon: string;
   verified: boolean;
+  payload: string;
 }
 
 export interface MaskItem {
+  id: number;
   title: string;
   description: string;
   privateKey: string;
   methods: {
     name: SupportedMethodName;
+    document: string;
     status: ItemAvailability;
   }[];
   icon: string;
@@ -60,4 +64,14 @@ export interface DIDMethod {
     offline: string;
     online: string;
   };
+}
+
+export interface HistoryItem {
+  id: number;
+  action: string;
+  type: 'meta' | 'mask' | 'did';
+  vendor: string;
+  status: 'online' | 'offline';
+  payload: string;
+  time: Date;
 }

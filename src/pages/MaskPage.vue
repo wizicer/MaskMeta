@@ -124,6 +124,7 @@ const store = useVaultStore();
 const items = computed(() => store.maskItems);
 function addMask() {
   store.newMaskItem({
+    id: -1,
     title: 'New Mask',
     description: 'This is a new mask',
     privateKey: 'pri',
@@ -131,6 +132,7 @@ function addMask() {
       {
         name: 'mm',
         status: 'offline',
+        document: '',
       },
     ],
     icon: 'face',

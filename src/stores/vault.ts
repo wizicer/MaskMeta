@@ -6,38 +6,39 @@ import {
   CredentialItem,
   Issuer,
   DIDMethod,
+  HistoryItem,
 } from '../models/entity';
 
 const metaItems: MetaItem[] = [
-  {
-    title: 'Meta 1',
-    description: 'This is a description for Meta 1.',
-    date: '2023-10-01',
-    icon: 'apple',
-    verified: true,
-  },
-  {
-    title: 'Meta 2',
-    description: 'This is a description for Meta 2.',
-    date: '2023-9-01',
-    icon: 'facebook',
-    verified: true,
-  },
+  // {
+  //   title: 'Meta 1',
+  //   description: 'This is a description for Meta 1.',
+  //   date: '2023-10-01',
+  //   icon: 'apple',
+  //   verified: true,
+  // },
+  // {
+  //   title: 'Meta 2',
+  //   description: 'This is a description for Meta 2.',
+  //   date: '2023-9-01',
+  //   icon: 'facebook',
+  //   verified: true,
+  // },
 ];
 
 const maskItems: MaskItem[] = [
-  {
-    title: 'Mask 1',
-    description: 'Comment of Mask 1',
-    privateKey: 'pri',
-    methods: [
-      {
-        name: 'mm',
-        status: 'online',
-      },
-    ],
-    icon: 'face',
-  },
+  // {
+  //   title: 'Mask 1',
+  //   description: 'Comment of Mask 1',
+  //   privateKey: 'pri',
+  //   methods: [
+  //     {
+  //       name: 'mm',
+  //       status: 'online',
+  //     },
+  //   ],
+  //   icon: 'face',
+  // },
 ];
 
 const credentialCategories: CredentialCategory[] = [
@@ -228,26 +229,83 @@ const credentialIssuers = {
   items: credentialItems,
 };
 
+const history: HistoryItem[] = [];
+
 export const useVaultStore = defineStore('vault', {
   state: () => ({
     metaItems,
     maskItems,
     credentialIssuers,
     didMethods,
+    history,
+    index: 0,
   }),
 
   getters: {
     count(state) {
       return state.metaItems.length;
     },
+
+    issuerDict(state) {
+      const issuersDict = state.credentialIssuers.issuers.reduce(
+        (acc, issuer) => {
+          acc[issuer.name] = issuer;
+          return acc;
+        },
+        {} as Record<string, Issuer>,
+      );
+      return issuersDict;
+    },
+
+    metaItemDict(state) {
+      const metaItemsDict = state.metaItems.reduce(
+        (acc, metaItem) => {
+          acc[metaItem.id] = metaItem;
+          return acc;
+        },
+        {} as Record<number, MetaItem>,
+      );
+      return metaItemsDict;
+    },
+
+    maskItemDict(state) {
+      const maskItemsDict = state.maskItems.reduce(
+        (acc, maskItem) => {
+          acc[maskItem.id] = maskItem;
+          return acc;
+        },
+        {} as Record<number, MaskItem>,
+      );
+      return maskItemsDict;
+    },
   },
 
   actions: {
     newMetaItem(metaItem: MetaItem) {
+      metaItem.id = this.index++;
       this.metaItems.push(metaItem);
+      this.history.push({
+        id: this.history.length,
+        action: 'new',
+        type: 'meta',
+        vendor: 'unknown',
+        status: 'offline',
+        payload: metaItem.payload,
+        time: new Date(Date.now()),
+      });
     },
     newMaskItem(maskItem: MaskItem) {
+      maskItem.id = this.index++;
       this.maskItems.push(maskItem);
+      this.history.push({
+        id: this.history.length,
+        action: 'new',
+        type: 'mask',
+        vendor: 'unknown',
+        status: 'offline',
+        payload: 'no',
+        time: new Date(Date.now()),
+      });
     },
     newMaskMethod(maskItem: MaskItem, method: DIDMethod) {
       const foundMaskItem = this.maskItems.find(
@@ -261,6 +319,7 @@ export const useVaultStore = defineStore('vault', {
           foundMaskItem.methods.push({
             name: method.prefix,
             status: 'offline',
+            document: '',
           });
         }
       }

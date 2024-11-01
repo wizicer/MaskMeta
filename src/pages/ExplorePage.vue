@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { CredentialCategory, CredentialItem, Issuer } from 'src/models/entity';
+import { CredentialCategory, CredentialItem } from 'src/models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed } from 'vue';
 import { Dialog } from 'quasar';
@@ -100,16 +100,7 @@ const categories = computed(() => {
   return categoriesDict;
 });
 
-const issuers = computed(() => {
-  const issuersDict = store.credentialIssuers.issuers.reduce(
-    (acc, issuer) => {
-      acc[issuer.name] = issuer;
-      return acc;
-    },
-    {} as Record<string, Issuer>,
-  );
-  return issuersDict;
-});
+const issuers = computed(() => store.issuerDict);
 const itemCategories = computed(() => {
   return store.credentialIssuers.items.reduce(
     (acc, item) => {
