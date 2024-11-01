@@ -20,14 +20,14 @@ if (store.$state.maskItems.length == 0) {
     icon: 'face',
   });
 
-  store.newMetaItem({
-    id: -1,
-    title: 'Meta 1',
-    description: 'This is a description for Meta 1.',
-    date: '2023-10-01',
-    icon: 'apple',
-    verified: true,
-    payload: '',
-  });
+  // store.newMetaItem({
+  //   id: -1,
+  //   title: 'Meta 1',
+  //   description: 'This is a description for Meta 1.',
+  //   date: '2023-10-01',
+  //   icon: 'apple',
+  //   verified: true,
+  //   payload: '',
+  // });
 }
 </script>

@@ -109,11 +109,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, Ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
-import { CredentialItem, MaskItem } from '../models/entity';
+import { CredentialItem, MaskItem, DIDMethod } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
-import { computed, ref } from 'vue';
-import { Ref } from 'vue';
+import { create } from '@arcblock/vc';
+// import { fromSecretKey } from '@ocap/wallet';
+import { fromRandom } from '@ocap/wallet';
+import { DidJwk } from '@web5/dids';
+import { VerifiableCredential } from '@web5/credentials';
 
 const store = useVaultStore();
 
@@ -122,7 +126,7 @@ const reportId = ref('');
 const address = ref('');
 const text = ref('');
 const imageFile = ref<File | null>(null);
-const method = ref('');
+const method: Ref<DIDMethod | null> = ref(null);
 
 // Define a computed property for maskOptions
 const maskOptions = computed(() => store.maskItems);
@@ -140,7 +144,7 @@ const issuers = computed(() => store.issuerDict);
 
 const file = ref<File | null>(null);
 
-defineProps<{
+const prop = defineProps<{
   item: CredentialItem;
 }>();
 
@@ -158,7 +162,91 @@ function onCloseClick() {
   onDialogHide();
 }
 
-function onOkClick() {
+async function onOkClick() {
+  if (prop.item.name === 'Text') {
+    // const issuer = fromSecretKey(mask.value.privateKey);
+    const issuer = fromRandom();
+    const holder = fromRandom();
+    const vc = create({
+      type: 'SelfSignedText',
+      issuer: {
+        name: 'Self-' + mask.value?.title,
+        wallet: issuer,
+      },
+      subject: {
+        // id: method.value.did,
+        id: holder.address,
+        text: text.value,
+      },
+      issuanceDate: new Date(Date.now()),
+      expirationDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      endpoint: '',
+      endpointScope: '',
+    });
+
+    store.newMetaItem({
+      id: -1,
+      title: 'Self-Signed Text',
+      description: 'A self-signed text credential',
+      date: new Date().toISOString(),
+      icon: 'fingerprint',
+      verified: true,
+      payload: JSON.stringify(vc),
+      issuer: 'self_arc',
+    });
+  } else if (prop.item.name === 'Address') {
+    const selectedMethod = mask.value?.methods.find(
+      (m) => m.name === method.value?.prefix,
+    );
+
+    const did = await DidJwk.import({
+      portableDid: JSON.parse(selectedMethod.document),
+    });
+
+    const vc = await VerifiableCredential.create({
+      type: 'AddressCredential',
+      issuer: 'Self-' + mask.value?.title,
+      subject: selectedMethod.did,
+      issuanceDate: toXmlDateTime(new Date(Date.now())),
+      expirationDate: toXmlDateTime(
+        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      ),
+      data: {
+        address: address.value,
+      },
+    });
+    const svc = await vc.sign({ did });
+
+    store.newMetaItem({
+      id: -1,
+      title: 'Self-Signed Address',
+      description: 'A self-signed Address credential',
+      date: new Date().toISOString(),
+      icon: 'rtt',
+      verified: true,
+      payload: JSON.stringify(svc),
+      issuer: 'self_tbd',
+    });
+  }
+
   onDialogOK();
+}
+
+function toXmlDateTime(date: Date): string {
+  // Helper function to pad single digits with a leading zero
+  const pad = (num: number) => String(num).padStart(2, '0');
+
+  // Extract date components
+  const year = date.getUTCFullYear();
+  const month = pad(date.getUTCMonth() + 1); // Months are zero-based
+  const day = pad(date.getUTCDate());
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+
+  // Construct the XML Schema xs:dateTime string
+  const xmlDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+
+  return xmlDateTime;
 }
 </script>

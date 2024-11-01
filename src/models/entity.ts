@@ -9,6 +9,14 @@ export interface MetaItem {
   icon: string;
   verified: boolean;
   payload: string;
+  issuer: string;
+}
+
+export interface MethodItem {
+  name: SupportedMethodName;
+  document: string;
+  did: string;
+  status: ItemAvailability;
 }
 
 export interface MaskItem {
@@ -16,12 +24,7 @@ export interface MaskItem {
   title: string;
   description: string;
   privateKey: string;
-  methods: {
-    name: SupportedMethodName;
-    document: string;
-    did: string;
-    status: ItemAvailability;
-  }[];
+  methods: MethodItem[];
   icon: string;
   color?: string;
 }

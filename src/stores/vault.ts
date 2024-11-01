@@ -59,6 +59,18 @@ const issuers: Issuer[] = [
     avatar: 'https://via.placeholder.com/64',
   },
   {
+    name: 'self_arc',
+    title: 'Self Issuer (Arcblock)',
+    description: 'Issuer for self-issued credentials.',
+    avatar: 'https://via.placeholder.com/64',
+  },
+  {
+    name: 'self_tbd',
+    title: 'Self Issuer (TBD Block)',
+    description: 'Issuer for self-issued credentials.',
+    avatar: 'https://via.placeholder.com/64',
+  },
+  {
     name: 'zk',
     title: 'ZKP Issuer',
     description: 'Issuer using Zero knowledge Proof.',
@@ -93,14 +105,14 @@ const issuers: Issuer[] = [
 const credentialItems: CredentialItem[] = [
   {
     name: 'Address',
-    issuer: 'self',
+    issuer: 'self_tbd',
     category: 'Anything',
     description: 'The onchain address you want to associate with your Mask',
     available: true,
   },
   {
     name: 'Text',
-    issuer: 'self',
+    issuer: 'self_arc',
     category: 'Anything',
     description:
       'Any text that can be issued by yourself to be wrapped in a Meta',
@@ -108,7 +120,7 @@ const credentialItems: CredentialItem[] = [
   },
   {
     name: 'Image',
-    issuer: 'self',
+    issuer: 'self_arc',
     category: 'Anything',
     description:
       'Any image that can be issued by yourself to be wrapped in a Meta',
