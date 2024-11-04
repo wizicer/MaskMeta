@@ -18,7 +18,9 @@
                 ? maskItems[entry.id]?.title
                 : entry.type == 'meta'
                   ? metaItems[entry.id]?.title
-                  : ''
+                  : entry.type == 'did'
+                    ? entry.vendor
+                    : ''
             }}</strong>
           </template>
           <template v-slot:subtitle>
@@ -28,7 +30,7 @@
       </q-timeline>
     </div>
 
-    <!-- Chainlink Details Column -->
+    <!-- Details Column -->
     <div class="col-6">
       <q-card>
         <q-card-section class="text-subtitle1 text-weight-medium"
@@ -36,9 +38,11 @@
         >
         <q-separator />
 
-        <!-- Chainlink Details -->
         <q-card-section>
-          <div class="text-caption">Issuer:</div>
+          <div class="text-caption">
+            Issuer:
+            <q-badge color="primary">{{ selectedEntry?.vendor }}</q-badge>
+          </div>
 
           <div class="text-caption q-mt-md">Payload:</div>
           <q-card class="bg-grey-2 q-pa-xs">
@@ -75,6 +79,9 @@ const store = useVaultStore();
 const timelineEntries = computed(() => store.history.toReversed());
 const maskItems = computed(() => store.maskItemDict);
 const metaItems = computed(() => store.metaItemDict);
+console.log('timelineEntries', timelineEntries.value);
+console.log('mask', maskItems.value);
+console.log('meta', metaItems.value);
 
 const selectedEntry: Ref<HistoryItem | null> = ref(null);
 

@@ -75,6 +75,7 @@ export interface DIDMethod {
 
 export interface HistoryItem {
   id: number;
+  index: number;
   action: string;
   type: 'meta' | 'mask' | 'did';
   vendor: string;

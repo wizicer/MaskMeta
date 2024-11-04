@@ -337,10 +337,11 @@ export const useVaultStore = defineStore('vault', {
       metaItem.id = this.index++;
       this.metaItems.push(metaItem);
       this.history.push({
-        id: this.history.length,
+        id: metaItem.id,
+        index: this.history.length,
         action: 'new',
         type: 'meta',
-        vendor: 'unknown',
+        vendor: metaItem.issuer,
         status: 'offline',
         payload: metaItem.payload,
         time: new Date(Date.now()),
@@ -353,10 +354,11 @@ export const useVaultStore = defineStore('vault', {
       }
       this.maskItems.push(maskItem);
       this.history.push({
-        id: this.history.length,
+        id: maskItem.id,
+        index: this.history.length,
         action: 'new',
         type: 'mask',
-        vendor: 'unknown',
+        vendor: 'self',
         status: 'offline',
         payload: '',
         time: new Date(Date.now()),
@@ -419,7 +421,8 @@ export const useVaultStore = defineStore('vault', {
         document,
       });
       this.history.push({
-        id: this.history.length,
+        id: foundMaskItem.id,
+        index: this.history.length,
         action: 'enable',
         type: 'did',
         vendor: method.prefix,
