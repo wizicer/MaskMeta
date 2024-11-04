@@ -297,7 +297,7 @@ function showMetaAdded() {
   Notify.create({
     type: 'positive',
     message: 'Meta added successfully!',
-    position: 'top',
+    position: 'bottom',
     timeout: 2500,
   });
 }
