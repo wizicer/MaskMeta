@@ -79,7 +79,8 @@
           <q-item-section>
             <q-item-label>Add mask</q-item-label>
             <q-item-label caption>
-              Mask is your decentralized identity, also known as DID.
+              Mask is your unified decentralized identity, encompassing multiple
+              DIDs.
             </q-item-label>
           </q-item-section>
         </q-item>
