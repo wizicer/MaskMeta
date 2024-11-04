@@ -18,6 +18,14 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  next();
+});
 
 const issuer = fromRandom();
 const holder = fromRandom();
@@ -26,6 +34,7 @@ app.post('/request_vc_arcblock', async (req, res) => {
   try {
     const { reportId, patientId, recipientDid } = req.body;
     if (!isValid(recipientDid) && recipientDid !== undefined) {
+      console.error('Invalid recipient DID', recipientDid);
       return res.status(400).send({ error: 'Invalid recipient DID' });
     }
     const vc = create({

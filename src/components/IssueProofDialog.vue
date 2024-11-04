@@ -241,6 +241,49 @@ async function onOkClick() {
     });
 
     showMetaAdded();
+  } else if (prop.item.name === 'Medical Report') {
+    const rdid = selectedMethod.did.slice('did:arc:'.length);
+    const response = await fetch('http://localhost:3000/request_vc_arcblock', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        patientId: patientId.value,
+        reportId: reportId.value,
+        recipientDid: rdid,
+      }),
+    });
+
+    if (!response.ok) {
+      Notify.create({
+        type: 'negative',
+        message: 'Failed to fetch medical report',
+      });
+      return;
+    }
+
+    const reportData = await response.json();
+
+    console.log('reportData', reportData);
+    store.newMetaItem({
+      id: -1,
+      title: 'Medical Report',
+      description: 'A medical report credential',
+      date: new Date().toISOString(),
+      icon: 'local_hospital',
+      verified: true,
+      payload: JSON.stringify(reportData),
+      issuer: 'hospital_api',
+      status: 'online',
+      fields: {
+        patientId: patientId.value,
+        reportId: reportId.value,
+      },
+      did: selectedMethod.did,
+    });
+
+    showMetaAdded();
   }
 
   onDialogOK();

@@ -398,10 +398,13 @@ export const useVaultStore = defineStore('vault', {
           break;
 
         case 'arc':
-          did = bech32m.encode(
-            'did:arc:',
-            bech32m.toWords(await hash(maskItem.privateKey)),
-          );
+          const { fromRandom } = await import('@ocap/wallet');
+          const holder = fromRandom();
+          did = 'did:arc:' + holder.address;
+          // did = bech32m.encode(
+          //   'did:arc:',
+          //   bech32m.toWords(await hash(maskItem.privateKey)),
+          // );
           break;
 
         default:
