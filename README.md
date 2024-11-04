@@ -114,3 +114,7 @@ yarn dev
 ```bash
 yarn build
 ```
+
+# License
+
+[MIT](LICENSE)

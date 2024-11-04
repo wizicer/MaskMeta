@@ -5,7 +5,7 @@
   "productName": "MaskMeta",
   "author": "shuang.liang <shuang.liang@okg.com>",
   "type": "module",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
