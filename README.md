@@ -2,10 +2,14 @@
 
 MaskMeta is an abstracted DID wallet, enabling users to manage their decentralized identities (DIDs) and verifiable credentials (VCs) with greater flexibility and ease.
 
+![](doc/1-concepts.svg)
+
 The name pays homage to MetaMask, and MaskMeta itself combines two key concepts:
 
 - **Mask**: An abstraction that unifies various DIDs across different ecosystems, such as TBD DID and ARC DID, providing a single, cohesive identity. This unified identity simplifies managing and recognizing an individual across multiple platforms.
 - **Meta**: Originally another term for VC, we expand "Meta" to encompass any data that can be encapsulated within it, such as links, texts, images, email, and more.
+
+![](doc/2-terminology.svg)
 
 In addition to these two core ideas, we introduce new terminology:
 
@@ -19,12 +23,16 @@ Our dissatisfaction with existing DID wallets and the fragmented DID ecosystem, 
 
 ## What It Does
 
+![](doc/3-features.svg)
+
 1. Introduces new terminology like Mask, Meta, Online Status, Criteria-Based Meta (VC), and ZKP Issuer.
 2. Integrates issuer functionalities from TBD and Arcblock.
 3. Supports DID sources like TBD, Pinata, and Arcblock.
 4. Provides multiple storage options for Meta, including local offline storage and online storage, which can be uploaded to a server or stored via Pinata.
 5. Offers visual representation in the Graph section, showing relationships between Meta (VC), Masks, and DIDs.
 6. Allows users to present Meta (VC) in either a criteria-based (privacy-protected) or full-disclosure manner.
+
+![](doc/4-scenarios.svg)
 
 With these features, we envision four primary scenarios:
 
