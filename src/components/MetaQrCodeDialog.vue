@@ -53,7 +53,7 @@ const fields: Ref<{ name: string; description: string; value: string }[]> =
     })),
   );
 
-const value = ref(props.item.description);
+const value = ref(props.item.payload);
 
 console.log('item', props.item);
 // const d: MetaItem | null = null;

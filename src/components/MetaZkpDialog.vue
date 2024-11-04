@@ -31,10 +31,18 @@
       </q-card-section>
 
       <q-separator />
-      <p v-if="result" class="q-ma-md">
-        Request: 
-        <pre class="wrappable">{{ result }}</pre>
-      </p>
+      <q-expansion-item v-if="result" class="q-ma-md" expand-separator>
+        <template v-slot:header>
+          <q-item-section>
+            <q-item-label>Request</q-item-label>
+          </q-item-section>
+        </template>
+        <q-card>
+          <q-card-section>
+            <pre class="wrappable">{{ result }}</pre>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
 
       <div v-if="!result" style="border: 2px solid black">
         <qrcode-stream
@@ -43,7 +51,8 @@
           @error="onError"
         ></qrcode-stream>
       </div>
-      <q-card-section>
+
+      <q-card-section v-if="result">
         <q-list separator>
           <q-item
             v-for="(field, index) in fields"
@@ -55,8 +64,8 @@
               <!-- <div class="text-body1">{{ field.description }}</div> -->
               <div class="text-caption">
                 <template v-if="exposureFields.includes(field.name)">
-                  <q-icon name="visibility" color="red" class="q-mr-sm" />
-                  <span class="text-red">Exposure</span>
+                  <q-icon name="visibility" color="orange" class="q-mr-sm" />
+                  <span class="text-orange">Partially Exposure (>1990)</span>
                 </template>
                 <template v-else>
                   <q-icon name="visibility_off" color="green" class="q-mr-sm" />
@@ -69,6 +78,11 @@
           </q-item>
         </q-list>
       </q-card-section>
+
+      <q-card-section v-if="result" class="row justify-center q-mx-md">
+        <qrcode-vue :size="250" :value="qrValue"></qrcode-vue>
+      </q-card-section>
+
       <q-card-actions align="right">
         <q-btn color="primary" label="Close" @click="onCloseClick" />
       </q-card-actions>
@@ -81,6 +95,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { MetaItem } from '../models/entity';
 // import * as Entity from '../models/entity';
 import { QrcodeStream } from 'vue-qrcode-reader';
+import QrcodeVue from 'qrcode.vue';
 import { Ref, computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -91,6 +106,23 @@ console.log('item', props.item);
 
 const result = ref('');
 const error = ref('');
+const qrValue = ref('');
+
+// Function to generate a random base58 string of length 200
+function generateBase58String(length: number): string {
+  const base58Chars =
+    '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += base58Chars.charAt(
+      Math.floor(Math.random() * base58Chars.length),
+    );
+  }
+  return result;
+}
+
+// Generate the base58 string and assign it to qrValue
+qrValue.value = generateBase58String(200);
 
 const fields: Ref<{ name: string; description: string; value: string }[]> =
   computed(() =>
@@ -101,7 +133,7 @@ const fields: Ref<{ name: string; description: string; value: string }[]> =
     })),
   );
 
-  const exposureFields :Ref<string[]>=ref([]);
+const exposureFields: Ref<string[]> = ref([]);
 
 interface DetectedCode {
   boundingBox: {
@@ -156,8 +188,10 @@ function onError(err: Error) {
 
 function onDetect(detectedCodes: DetectedCode[]) {
   const obj = JSON.parse(detectedCodes[0].rawValue);
-  exposureFields.value = obj.request.criterias.map((_:{field:string})=>_.field);
-  console.log(exposureFields.value)
+  exposureFields.value = obj.request.criterias.map(
+    (_: { field: string }) => _.field,
+  );
+  console.log(exposureFields.value);
   result.value = JSON.stringify(
     detectedCodes.map((code) => JSON.parse(code.rawValue)),
     null,
