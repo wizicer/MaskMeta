@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { computed, ref, Ref } from 'vue';
-import { useDialogPluginComponent } from 'quasar';
+import { Notify, useDialogPluginComponent } from 'quasar';
 import { CredentialItem, MaskItem, DIDMethod } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { create } from '@arcblock/vc';
@@ -163,6 +163,10 @@ function onCloseClick() {
 }
 
 async function onOkClick() {
+  const selectedMethod = mask.value?.methods.find(
+    (m) => m.name === method.value?.prefix,
+  );
+
   if (prop.item.name === 'Text') {
     // const issuer = fromSecretKey(mask.value.privateKey);
     const issuer = fromRandom();
@@ -193,12 +197,15 @@ async function onOkClick() {
       verified: true,
       payload: JSON.stringify(vc),
       issuer: 'self_arc',
+      status: 'offline',
+      fields: {
+        text: text.value,
+      },
+      did: selectedMethod.did,
     });
-  } else if (prop.item.name === 'Address') {
-    const selectedMethod = mask.value?.methods.find(
-      (m) => m.name === method.value?.prefix,
-    );
 
+    showMetaAdded();
+  } else if (prop.item.name === 'Address') {
     const did = await DidJwk.import({
       portableDid: JSON.parse(selectedMethod.document),
     });
@@ -219,17 +226,33 @@ async function onOkClick() {
 
     store.newMetaItem({
       id: -1,
-      title: 'Self-Signed Address',
+      title: 'Self-Signed Address: ' + address.value,
       description: 'A self-signed Address credential',
       date: new Date().toISOString(),
       icon: 'rtt',
       verified: true,
       payload: JSON.stringify(svc),
       issuer: 'self_tbd',
+      status: 'offline',
+      fields: {
+        address: address.value,
+      },
+      did: selectedMethod.did,
     });
+
+    showMetaAdded();
   }
 
   onDialogOK();
+}
+
+function showMetaAdded() {
+  Notify.create({
+    type: 'positive',
+    message: 'Meta added successfully!',
+    position: 'top',
+    timeout: 2500,
+  });
 }
 
 function toXmlDateTime(date: Date): string {

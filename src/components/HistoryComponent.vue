@@ -15,9 +15,9 @@
             {{ entry.action }} <q-chip>{{ entry.type }}</q-chip>
             <strong>{{
               entry.type == 'mask'
-                ? maskItems[entry.id].title
+                ? maskItems[entry.id]?.title
                 : entry.type == 'meta'
-                  ? metaItems[entry.id].title
+                  ? metaItems[entry.id]?.title
                   : ''
             }}</strong>
           </template>
@@ -42,7 +42,7 @@
 
           <div class="text-caption q-mt-md">Payload:</div>
           <q-card class="bg-grey-2 q-pa-xs">
-            <pre>{{ selectedEntry?.payload }}</pre>
+            <pre class="wrappable">{{ selectedEntry?.payload }}</pre>
           </q-card>
         </q-card-section>
 
@@ -72,7 +72,7 @@ import { useVaultStore } from '../stores/vault';
 import { ref } from 'vue';
 import { HistoryItem } from 'src/models/entity';
 const store = useVaultStore();
-const timelineEntries = computed(() => store.history);
+const timelineEntries = computed(() => store.history.toReversed());
 const maskItems = computed(() => store.maskItemDict);
 const metaItems = computed(() => store.metaItemDict);
 
@@ -95,5 +95,13 @@ function formatTime(time: Date) {
 <style scoped>
 .q-timeline-entry .row {
   align-items: center;
+}
+.wrappable {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
 }
 </style>

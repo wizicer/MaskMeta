@@ -366,56 +366,64 @@ export const useVaultStore = defineStore('vault', {
       const foundMaskItem = this.maskItems.find(
         (item) => item.title === maskItem.title,
       );
-      if (foundMaskItem) {
-        const existingMethod = foundMaskItem.methods.find(
-          (m) => m.name === method.name,
-        );
+      if (!foundMaskItem) return;
 
-        let did = '';
-        let document = '';
-        console.log(method.prefix);
-        switch (method.prefix) {
-          case 'mm':
-            did = bech32m.encode(
-              'did:mm:',
-              bech32m.toWords(await hash(maskItem.privateKey)),
-            );
-            break;
+      const existingMethod = foundMaskItem.methods.find(
+        (m) => m.name === method.name,
+      );
+      if (existingMethod) return;
 
-          case 'pin':
-            did = bech32m.encode(
-              'did:pin:',
-              bech32m.toWords(await hash(maskItem.privateKey)),
-            );
-            break;
+      let did = '';
+      let document = '';
+      console.log(method.prefix);
+      switch (method.prefix) {
+        case 'mm':
+          did = bech32m.encode(
+            'did:mm:',
+            bech32m.toWords(await hash(maskItem.privateKey)),
+          );
+          break;
 
-          case 'tbd':
-            const didjwk = await DidJwk.create();
-            did = didjwk.uri;
-            document = JSON.stringify(await didjwk.export());
-            break;
+        case 'pin':
+          did = bech32m.encode(
+            'did:pin:',
+            bech32m.toWords(await hash(maskItem.privateKey)),
+          );
+          break;
 
-          case 'arc':
-            did = bech32m.encode(
-              'did:arc:',
-              bech32m.toWords(await hash(maskItem.privateKey)),
-            );
-            break;
+        case 'tbd':
+          const didjwk = await DidJwk.create();
+          did = didjwk.uri;
+          document = JSON.stringify(await didjwk.export());
+          break;
 
-          default:
-            console.warn('Unsupported DID method prefix', method.prefix);
-            break;
-        }
+        case 'arc':
+          did = bech32m.encode(
+            'did:arc:',
+            bech32m.toWords(await hash(maskItem.privateKey)),
+          );
+          break;
 
-        if (!existingMethod) {
-          foundMaskItem.methods.push({
-            name: method.prefix,
-            status: 'offline',
-            did,
-            document,
-          });
-        }
+        default:
+          console.warn('Unsupported DID method prefix', method.prefix);
+          break;
       }
+
+      foundMaskItem.methods.push({
+        name: method.prefix,
+        status: 'offline',
+        did,
+        document,
+      });
+      this.history.push({
+        id: this.history.length,
+        action: 'enable',
+        type: 'did',
+        vendor: method.prefix,
+        status: 'offline',
+        payload: JSON.stringify({ did, document }, null, 2),
+        time: new Date(Date.now()),
+      });
     },
   },
 });

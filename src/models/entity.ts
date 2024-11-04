@@ -10,6 +10,9 @@ export interface MetaItem {
   verified: boolean;
   payload: string;
   issuer: string;
+  fields: Record<string, string>;
+  did: string;
+  status: ItemAvailability;
 }
 
 export interface MethodItem {
@@ -75,7 +78,7 @@ export interface HistoryItem {
   action: string;
   type: 'meta' | 'mask' | 'did';
   vendor: string;
-  status: 'online' | 'offline';
+  status: ItemAvailability;
   payload: string;
   time: Date;
 }
