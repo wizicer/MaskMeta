@@ -117,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogPluginComponent } from 'quasar';
+import { Notify, useDialogPluginComponent } from 'quasar';
 import { MaskItem, DIDMethod } from '../models/entity';
 import { useVaultStore } from 'src/stores/vault';
 import { computed } from 'vue';
@@ -155,8 +155,26 @@ const enabled = computed(() => {
 });
 console.log(doneMethods);
 
-function setOnline(method: DIDMethod) {
+async function setOnline(method: DIDMethod) {
   console.log('set online', method);
+  if (method.prefix == 'pin') {
+    const response = await fetch('http://localhost:3000/vc_upload_pinata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(prop.item),
+    });
+
+    if (!response.ok) {
+      Notify.create({
+        type: 'negative',
+        message: 'Failed to upload',
+      });
+      return;
+    }
+  }
+
   store.setMethodOnline(prop.item, method);
 }
 
