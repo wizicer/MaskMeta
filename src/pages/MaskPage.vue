@@ -9,11 +9,9 @@
         <q-icon name="tips_and_updates" />
       </template>
       <span class="highlight_mask">Mask</span> is an abstraction that unifies
-      different Decentralized Identifiers (DIDs) across various ecosystems, such
-      as TBD DID, and ARC DID. It serves as a single, cohesive identity that
-      ties together all the various DIDs belonging to the same individual,
-      making it easier to manage and recognize the individual across multiple
-      platforms.
+      various DIDs across different ecosystems, such as TBD DID and ARC DID,
+      providing a single, cohesive identity. This unified identity simplifies
+      managing and recognizing an individual across multiple platforms.
 
       <template v-slot:action>
         <q-btn flat color="white" label="Dismiss" @click="dismissBanner" />

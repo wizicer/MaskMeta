@@ -8,12 +8,10 @@
       <template v-slot:avatar>
         <q-icon name="tips_and_updates" />
       </template>
-      <span class="highlight_meta">Meta</span> is shorthand for
-      <span class="highlight_meta">metadata</span>, which is data about other
-      data. The <span class="highlight_meta">Meta</span> used to describe
-      various underlying data, allowing any data to be wrapped into a
-      <span class="highlight_meta">Meta</span>. Examples include Verifiable
-      Credentials, Links, Texts, Images, and more.
+      <span class="highlight_meta">Meta</span>
+      is originally another term for VC, we expand "Meta" to encompass any data
+      that can be encapsulated within it, such as links, texts, images, email,
+      and more.
       <template v-slot:action>
         <q-btn flat color="white" label="Dismiss" @click="dismissBanner" />
       </template>
