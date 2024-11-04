@@ -17,7 +17,17 @@
 
       <q-card-section class="bg-warning text-white q-pa-md q-mb-md">
         <div class="text-h6">Privacy Alert</div>
-        <div>This QR code will expose all fields of the Meta, including:</div>
+        <div>
+          This QR code will expose all fields of the Meta, including:
+          <ul>
+            <li v-for="(field, i) in fields" :key="i">
+              {{ field.name }}
+              <q-badge class="q-ml-sm">
+                {{ field.value }}
+              </q-badge>
+            </li>
+          </ul>
+        </div>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -28,11 +38,20 @@ import { useDialogPluginComponent } from 'quasar';
 import { MetaItem } from '../models/entity';
 // import * as Entity from '../models/entity';
 import QrcodeVue from 'qrcode.vue';
-import { ref } from 'vue';
+import { Ref, computed, ref } from 'vue';
 
 const props = defineProps<{
   item: MetaItem;
 }>();
+
+const fields: Ref<{ name: string; description: string; value: string }[]> =
+  computed(() =>
+    Object.keys(props.item.fields).map((_) => ({
+      name: _,
+      description: '',
+      value: props.item.fields[_],
+    })),
+  );
 
 const value = ref(props.item.description);
 
