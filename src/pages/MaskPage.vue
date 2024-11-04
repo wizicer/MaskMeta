@@ -1,73 +1,97 @@
 <template>
-  <q-page class="row q-ma-md">
-    <q-list class="full-width" style="max-width: 600px">
-      <q-card v-for="(item, i) in items" :key="i" class="q-mb-md">
-        <q-card-section clickable v-ripple @click="showThisItem(item)">
-          <div class="row items-center">
-            <q-icon name="face" size="2.5em" class="q-mr-md" />
-            <div>
-              <q-item-label>{{ item.title }}</q-item-label>
-              <q-item-label caption>{{ item.description }}</q-item-label>
-            </div>
-            <q-space />
-            <q-icon name="keyboard_arrow_right" size="2em" />
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-section>
-          <div
-            v-for="(method, index) in item.methods"
-            :key="index"
-            class="row items-center q-mb-sm"
-          >
-            <div class="ellipsis-container">
-              <q-tooltip>
-                {{ method.did }}
-              </q-tooltip>
-              <q-item-label class="ellipsis">{{ method.did }}</q-item-label>
-            </div>
-            <q-space />
-            <q-item-label caption>
-              <q-icon
-                :name="
-                  method.status === 'online' ? 'check_circle' : 'highlight_off'
-                "
-                :color="method.status === 'online' ? 'green' : 'grey'"
-                size="1.5em"
-                class="q-mr-sm"
-              />
-              {{ method.status }}
-            </q-item-label>
-          </div>
-          <div class="row justify-end q-mt-md">
-            <q-btn
-              flat
-              dense
-              label="Manage"
-              color="primary"
-              @click="manageDid(item)"
-            />
-          </div>
-        </q-card-section>
-      </q-card>
+  <q-page>
+    <q-banner
+      inline-actions
+      class="bg-info text-white full-width q-py-md"
+      v-if="showBanner"
+    >
+      <template v-slot:avatar>
+        <q-icon name="tips_and_updates" />
+      </template>
+      <span class="highlight_mask">Mask</span> is an abstraction that unifies
+      different Decentralized Identifiers (DIDs) across various ecosystems, such
+      as TBD DID, and ARC DID. It serves as a single, cohesive identity that
+      ties together all the various DIDs belonging to the same individual,
+      making it easier to manage and recognize the individual across multiple
+      platforms.
 
-      <q-item clickable v-ripple @click="addMask">
-        <q-item-section avatar>
-          <q-icon name="add_circle_outline" size="3em" />
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>Add mask</q-item-label>
-          <q-item-label caption>
-            Mask is your decentralized identity, also known as DID.
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+      <template v-slot:action>
+        <q-btn flat color="white" label="Dismiss" @click="dismissBanner" />
+      </template>
+    </q-banner>
+
+    <div class="row q-mx-md">
+      <q-list class="full-width" style="max-width: 600px">
+        <q-card v-for="(item, i) in items" :key="i" class="q-mb-md">
+          <q-card-section clickable v-ripple @click="showThisItem(item)">
+            <div class="row items-center">
+              <q-icon name="face" size="2.5em" class="q-mr-md" />
+              <div>
+                <q-item-label>{{ item.title }}</q-item-label>
+                <q-item-label caption>{{ item.description }}</q-item-label>
+              </div>
+              <q-space />
+              <q-icon name="keyboard_arrow_right" size="2em" />
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-section>
+            <div
+              v-for="(method, index) in item.methods"
+              :key="index"
+              class="row items-center q-mb-sm"
+            >
+              <div class="ellipsis-container">
+                <q-tooltip>
+                  {{ method.did }}
+                </q-tooltip>
+                <q-item-label class="ellipsis">{{ method.did }}</q-item-label>
+              </div>
+              <q-space />
+              <q-item-label caption>
+                <q-icon
+                  :name="
+                    method.status === 'online'
+                      ? 'check_circle'
+                      : 'highlight_off'
+                  "
+                  :color="method.status === 'online' ? 'green' : 'grey'"
+                  size="1.5em"
+                  class="q-mr-sm"
+                />
+                {{ method.status }}
+              </q-item-label>
+            </div>
+            <div class="row justify-end q-mt-md">
+              <q-btn
+                flat
+                dense
+                label="Manage"
+                color="primary"
+                @click="manageDid(item)"
+              />
+            </div>
+          </q-card-section>
+        </q-card>
+
+        <q-item clickable v-ripple @click="addMask">
+          <q-item-section avatar>
+            <q-icon name="add_circle_outline" size="3em" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Add mask</q-item-label>
+            <q-item-label caption>
+              Mask is your decentralized identity, also known as DID.
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useVaultStore } from 'stores/vault';
 import { Dialog } from 'quasar';
 import MaskDetailDialog from 'components/MaskDetailDialog.vue';
@@ -134,6 +158,12 @@ function addMask() {
     icon: 'face',
   });
 }
+
+const showBanner = ref(true);
+
+const dismissBanner = () => {
+  showBanner.value = false;
+};
 </script>
 
 <style scoped>
@@ -150,5 +180,10 @@ function addMask() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.highlight_mask {
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
 }
 </style>
