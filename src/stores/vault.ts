@@ -428,6 +428,25 @@ export const useVaultStore = defineStore('vault', {
         time: new Date(Date.now()),
       });
     },
+    async setMethodOnline(maskItem: MaskItem, method: DIDMethod) {
+      const foundMaskItem = this.maskItems.find(
+        (item) => item.title === maskItem.title,
+      );
+      if (!foundMaskItem) {
+        console.error('Mask item not found', maskItem.id);
+        return;
+      }
+
+      console.log('ms', foundMaskItem.methods);
+      const existingMethod = foundMaskItem.methods.find(
+        (m) => m.name === method.prefix,
+      );
+      if (!existingMethod) {
+        console.error('DID method not found', method.prefix);
+        return;
+      }
+      existingMethod.status = 'online';
+    },
   },
 });
 

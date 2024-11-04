@@ -155,9 +155,9 @@ const enabled = computed(() => {
 });
 console.log(doneMethods);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function setOnline(method: any) {
-  console.log(method);
+function setOnline(method: DIDMethod) {
+  console.log('set online', method);
+  store.setMethodOnline(prop.item, method);
 }
 
 defineEmits([...useDialogPluginComponent.emits]);
