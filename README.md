@@ -36,13 +36,13 @@ Our dissatisfaction with existing DID wallets and the fragmented DID ecosystem, 
 
 With these features, we envision four primary scenarios:
 
-### Hospital Medical Record
+### Hospital Medical Records
 
 1. A hospital issues a medical record Meta (VC) to a patient.
 2. The patient can selectively link this Meta (VC) to one of their DIDs within Mask.
 3. The patient can present this Meta (VC) to a doctor through a request (QR code) and response, without disclosing private information.
 
-### Binding an Onchain Address
+### Onchain Portfolio
 
 1. A user can bind an onchain address to one of their DIDs in Mask.
 2. All Meta (VC) and Mask data can be published online.
