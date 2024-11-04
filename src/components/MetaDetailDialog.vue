@@ -34,26 +34,17 @@
 
       <q-card-section>
         <q-list separator>
-          <q-item clickable v-ripple>
+          <q-item
+            v-for="(field, index) in fields"
+            :key="index"
+            clickable
+            v-ripple
+          >
             <q-item-section>
-              <div class="text-caption">Field Name 1</div>
-              <div class="text-body1">Description 1</div>
+              <div class="text-caption">{{ field.name }}</div>
+              <div class="text-body1">{{ field.description }}</div>
             </q-item-section>
-            <q-item-section side>Item 4</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <div class="text-caption">Field Name 2</div>
-              <div class="text-body1">Description 2</div>
-            </q-item-section>
-            <q-item-section side>Item 5</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <div class="text-caption">Field Name 3</div>
-              <div class="text-body1">Description 3</div>
-            </q-item-section>
-            <q-item-section side>Item 6</q-item-section>
+            <q-item-section side>{{ field.value }}</q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
@@ -67,11 +58,21 @@
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
 import { MetaItem } from '../models/entity';
+import { Ref, computed } from 'vue';
 // import * as Entity from '../models/entity';
 
 const props = defineProps<{
   item: MetaItem;
 }>();
+
+const fields: Ref<{ name: string; description: string; value: string }[]> =
+  computed(() =>
+    Object.keys(props.item.fields).map((_) => ({
+      name: _,
+      description: '',
+      value: props.item.fields[_],
+    })),
+  );
 
 console.log('item', props.item);
 // const d: MetaItem | null = null;

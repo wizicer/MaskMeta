@@ -279,6 +279,10 @@ async function onOkClick() {
       fields: {
         patientId: patientId.value,
         reportId: reportId.value,
+        dateOfBirth: reportData.credentialSubject.patientInfo.dateOfBirth,
+        fullName: reportData.credentialSubject.patientInfo.fullName,
+        bloodPressure: reportData.credentialSubject.vitalSigns.bloodPressure,
+        heartRate: reportData.credentialSubject.vitalSigns.heartRate,
       },
       did: selectedMethod.did,
     });

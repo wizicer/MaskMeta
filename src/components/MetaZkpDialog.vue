@@ -31,43 +31,44 @@
       </q-card-section>
 
       <q-separator />
-      <p>
-        Last result: <b>{{ result }}</b>
+      <p v-if="result" class="q-ma-md">
+        Request: 
+        <pre class="wrappable">{{ result }}</pre>
       </p>
 
-      <div style="border: 2px solid black">
+      <div v-if="!result" style="border: 2px solid black">
         <qrcode-stream
           :track="paintBoundingBox"
           @detect="onDetect"
           @error="onError"
         ></qrcode-stream>
       </div>
-      <!-- 
       <q-card-section>
         <q-list separator>
-          <q-item clickable v-ripple>
+          <q-item
+            v-for="(field, index) in fields"
+            :key="index"
+            clickable
+            v-ripple
+          >
             <q-item-section>
-              <div class="text-caption">Field Name 1</div>
-              <div class="text-body1">Description 1</div>
+              <!-- <div class="text-body1">{{ field.description }}</div> -->
+              <div class="text-caption">
+                <template v-if="exposureFields.includes(field.name)">
+                  <q-icon name="visibility" color="red" class="q-mr-sm" />
+                  <span class="text-red">Exposure</span>
+                </template>
+                <template v-else>
+                  <q-icon name="visibility_off" color="green" class="q-mr-sm" />
+                  <span class="text-green">Privacy</span>
+                </template>
+              </div>
+              <div class="text-body1">{{ field.name }}</div>
             </q-item-section>
-            <q-item-section side>Item 4</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <div class="text-caption">Field Name 2</div>
-              <div class="text-body1">Description 2</div>
-            </q-item-section>
-            <q-item-section side>Item 5</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <div class="text-caption">Field Name 3</div>
-              <div class="text-body1">Description 3</div>
-            </q-item-section>
-            <q-item-section side>Item 6</q-item-section>
+            <q-item-section side>{{ field.value }}</q-item-section>
           </q-item>
         </q-list>
-      </q-card-section> -->
+      </q-card-section>
       <q-card-actions align="right">
         <q-btn color="primary" label="Close" @click="onCloseClick" />
       </q-card-actions>
@@ -80,7 +81,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { MetaItem } from '../models/entity';
 // import * as Entity from '../models/entity';
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { ref } from 'vue';
+import { Ref, computed, ref } from 'vue';
 
 const props = defineProps<{
   item: MetaItem;
@@ -90,6 +91,17 @@ console.log('item', props.item);
 
 const result = ref('');
 const error = ref('');
+
+const fields: Ref<{ name: string; description: string; value: string }[]> =
+  computed(() =>
+    Object.keys(props.item.fields).map((_) => ({
+      name: _,
+      description: '',
+      value: props.item.fields[_],
+    })),
+  );
+
+  const exposureFields :Ref<string[]>=ref([]);
 
 interface DetectedCode {
   boundingBox: {
@@ -143,7 +155,14 @@ function onError(err: Error) {
 }
 
 function onDetect(detectedCodes: DetectedCode[]) {
-  result.value = JSON.stringify(detectedCodes.map((code) => code.rawValue));
+  const obj = JSON.parse(detectedCodes[0].rawValue);
+  exposureFields.value = obj.request.criterias.map((_:{field:string})=>_.field);
+  console.log(exposureFields.value)
+  result.value = JSON.stringify(
+    detectedCodes.map((code) => JSON.parse(code.rawValue)),
+    null,
+    2,
+  );
 }
 
 // const d: MetaItem | null = null;
@@ -172,3 +191,14 @@ function onCloseClick() {
   // ...and it will also hide the dialog automatically
 }
 </script>
+
+<style scoped>
+.wrappable {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+}
+</style>
