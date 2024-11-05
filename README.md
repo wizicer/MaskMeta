@@ -116,6 +116,7 @@ cd server && yarn
 ## Start the app in development mode
 ```bash
 yarn dev
+cd server && yarn dev
 ```
 
 ## Build the app for production
